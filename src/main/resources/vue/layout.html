@@ -11,6 +11,7 @@
     <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.css" integrity="sha256-P45OhhEWm49G8sadt2n5rDaWLa3xZbDOQhJliuaojH0=" rel="stylesheet" />
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/flatly/bootstrap.min.css" integrity="sha384-T5jhQKMh96HMkXwqVMSjF3CmLcL1nT9//tCqu9By5XSdj7CwR0r+F3LTzUdfkkQf" rel="stylesheet" />
     <title>DDBlabs // IIIF Presentation API</title>
+    <base href="http://localhost" />
     <script src="https://cdn.jsdelivr.net/npm/vue"></script> @componentRegistration </head>
   <body>
     <br />
@@ -28,19 +29,19 @@
               <!-- <span class="badge badge-secondary badge-pill">3</span> -->
             </h4>
             <div class="list-group">
-              <a class="list-group-item list-group-item-action flex-column align-items-start" href="mirador-2.html?manifest=https://wellcomelibrary.org/iiif/b18035723/manifest" target="_blank">
+              <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="mirador2link" target="_blank">
                 <div class="d-flex w-100 justify-content-between">
                   <h6 class="mb-1">Mirator 2</h6>
                 </div>
                 <small class="text-muted">Open manifest in Mirador 2.7.0 viewer</small>
               </a>
-              <a class="list-group-item list-group-item-action flex-column align-items-start" href="mirador-3.html?manifest=https://wellcomelibrary.org/iiif/b18035723/manifest" target="_blank">
+              <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="mirador3link" target="_blank">
                 <div class="d-flex w-100 justify-content-between">
                   <h6 class="mb-1">Mirator 3</h6>
                 </div>
                 <small class="text-muted">Open manifest in Mirador 3.0.0-alpha.16 viewer</small>
               </a>
-              <a class="list-group-item list-group-item-action flex-column align-items-start" href="http://universalviewer.io/uv.html?manifest=https://wellcomelibrary.org/iiif/b18035723/manifest" target="_blank">
+              <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="universalviewerlink" target="_blank">
                 <div class="d-flex w-100 justify-content-between">
                   <h6 class="mb-1">Universal Viewer 2</h6>
                 </div>
@@ -50,6 +51,7 @@
           </div>
           <div class="col-md-8 order-md-1" id="main-vue">
             <h4 class="mb-3">Files</h4> @routeComponent </div>
+          <!-- row -->
         </div>
         <div class="row">
           <div class="col-md-12 order-md-12" id="main-code">
@@ -59,14 +61,14 @@
               <div class="card">
                 <!-- Card header -->
                 <div class="card-header" id="headingOne1" role="tab">
-                  <a aria-controls="collapseOne1" aria-expanded="false" data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1">
-                    <h5 class="mb-0">Manifest</h5>
+                  <a aria-controls="collapseOne1" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1" id="manifestlink">
+                    <h6 class="mb-0">Manifest</h6>
                   </a>
                 </div>
                 <!-- Card body -->
                 <div aria-labelledby="headingOne1" class="collapse" data-parent="#accordionEx" id="collapseOne1" role="tabpanel">
                   <div class="card-body">
-                    <pre class="language-json line-numbers" data-download-link="true" data-download-link-label="Download" data-src="api/files"></pre>
+                    <pre class="line-numbers"><code class="language-json" id="manifestPre"></code></pre>
                   </div>
                 </div>
               </div>
@@ -74,8 +76,8 @@
               <div class="card">
                 <!-- Card header -->
                 <div class="card-header" id="headingTwo2" role="tab">
-                  <a aria-controls="collapseTwo2" aria-expanded="false" class="collapsed" data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo2">
-                    <h5 class="mb-0">Presentation API Validator</h5>
+                  <a aria-controls="collapseTwo2" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo2" id="validatorlink">
+                    <h6 class="mb-0">Presentation API Validator</h6>
                   </a>
                 </div>
                 <!-- Card body -->
@@ -92,13 +94,16 @@
                       <p class="mb-0" id="validation-warnings">Aww yeah, no warning so far!</p>
                     </div>
                     <a aria-pressed="true" class="btn btn-primary" href="https://iiif.io/api/presentation/validator/service/" role="button" target="_blank">Visit Validation Service</a>
-                    <a aria-pressed="true" class="btn btn-secondary" href="http://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=https://manifests.sub.uni-goettingen.de/iiif/presentation/PPN253910196/manifest" role="button" target="_blank">Show JSON data</a>
+                    <a aria-pressed="true" class="btn btn-secondary" href="#" id="universalviewerdirectlink" role="button" target="_blank">Show JSON data</a>
                   </div>
                 </div>
               </div>
             </div>
+            <!-- main -->
           </div>
+          <!-- row -->
         </div>
+        <!-- jumbotron -->
       </div>
     </div>
     <script crossorigin="anonymous" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -107,50 +112,86 @@
     <script crossorigin="anonymous" integrity="sha256-Y+Budm2wBEjYjbH0qcJRmLuRBFpXd0VKxl6XhdS4hgA=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-core.min.js"></script>
     <script crossorigin="anonymous" integrity="sha256-ht8ay6ZTPZfuixYB99I5oRpCLsCq7Do2LjEYLwbe+X8=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/autoloader/prism-autoloader.min.js"></script>
     <script crossorigin="anonymous" integrity="sha256-hep5s8952MqR7Y79JYfCXZD6vQjVHs7sOu/ZGrs1OEQ=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-hjw3fX4mF5L8VGKPQxO7OBue7dZdkhtumGDiQy3Cxr8=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/file-highlight/prism-file-highlight.min.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-SyBDbq8Z29N+/5vK9bf2HpTtvAEGUIiLKw0iepvhLQg=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.js"></script>
     <script>
-$(document).ready(function() {
-    new Vue({
-        el: "#main-vue"
-    });
+        $(document).ready(function() {
+           new Vue({
+               el: "#main-vue"
+           });
 
-    // validation
-    $.getJSON("http://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=https://manifests.sub.uni-goettingen.de/iiif/presentation/PPN253910196/manifest", function(data) {
+           var getUrlParameter = function getUrlParameter(sParam) {
+               var sPageURL = window.location.search.substring(1),
+                   sURLVariables = sPageURL.split('&'),
+                   sParameterName,
+                   i;
 
-        if ($.isArray(data['error'])) {
-            var items = [];
-            $.each(data['error'], function(key, val) {
-                items.push("<li id=&quot;error-item-" + key + "&quot;>" + val + "</li>");
-            });
-            if (items.length > 0) {
-                $("#validation-errors").empty();
-            }
-            $("<ol></ol>", {
-                "class": "validation-error-list",
-                html: items.join("")
-            }).appendTo("#validation-errors");
-        } else if (data['error']) {
-            $("#validation-errors").html(data['error']);
-        }
+               for (i = 0; i < sURLVariables.length; i++) {
+                   sParameterName = sURLVariables[i].split('=');
 
-        if ($.isArray(data['warnings'])) {
-            var items = [];
-            $.each(data['warnings'], function(key, val) {
-                items.push("<li id=&quot;warnings-item-" + key + "&quot;>" + val + "</li>");
-            });
-            if (items.length > 0) {
-                $("#validation-warnings").empty();
-            }
-            $("<ol></ol>", {
-                "class": "validation-warnings-list",
-                html: items.join("")
-            }).appendTo("#validation-warnings");
-        } else if (data['warnings']) {
-            $("#validation-warnings").html(data['warnings']);
-        }
-    });
-});
+                   if (sParameterName[0] === sParam) {
+                       return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                   }
+               }
+           };
+
+           if (getUrlParameter('f')) {
+
+               // show JSON source code
+               $("#manifestPre").load("api/file?f=" + getUrlParameter('f'),
+                   function(responseText, textStatus, XMLHttpRequest) {
+                       if (textStatus === "success") {
+                           $("#manifestlink").removeClass("disabled");
+                       }
+                   });
+
+               // validation
+               var url = $("base").attr("href") + "/api/file?f=" + getUrlParameter('f');
+               url = encodeURIComponent(url);
+
+               $("#mirador2link").attr("href", "/mirador-2.html?manifest=" + url);
+               $("#mirador2link").removeClass("disabled");
+               $("#mirador3link").attr("href", "/mirador-3.html?manifest=" + url);
+               $("#mirador3link").removeClass("disabled");
+               $("#universalviewerlink").attr("href", "http://universalviewer.io/uv.html?manifest=" + url);
+               $("#universalviewerlink").removeClass("disabled");
+               $("#universalviewerdirectlink").attr("href", "http://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + url);
+
+               $.getJSON("http://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + url, function(data) {
+                   if ($.isArray(data['error'])) {
+                       var items = [];
+                       $.each(data['error'], function(key, val) {
+                           items.push("<li id=&quot;error-item-" + key + "&quot;>" + val + "</li>");
+                       });
+                       if (items.length > 0) {
+                           $("#validation-errors").empty();
+                       }
+                       $("<ol></ol>", {
+                           "class": "validation-error-list",
+                           html: items.join("")
+                       }).appendTo("#validation-errors");
+                   } else if (data['error']) {
+                       $("#validation-errors").html(data['error']);
+                   }
+
+                   if ($.isArray(data['warnings'])) {
+                       var items = [];
+                       $.each(data['warnings'], function(key, val) {
+                           items.push("<li id=&quot;warnings-item-" + key + "&quot;>" + val + "</li>");
+                       });
+                       if (items.length > 0) {
+                           $("#validation-warnings").empty();
+                       }
+                       $("<ol></ol>", {
+                           "class": "validation-warnings-list",
+                           html: items.join("")
+                       }).appendTo("#validation-warnings");
+                   } else if (data['warnings']) {
+                       $("#validation-warnings").html(data['warnings']);
+                   }
+               }).done(function() {
+                   $("#validatorlink").removeClass("disabled");
+               });
+           }
+       });
     </script>
   </body>
 </html>

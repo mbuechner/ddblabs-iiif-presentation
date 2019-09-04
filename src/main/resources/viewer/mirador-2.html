@@ -18,27 +18,33 @@
         <div id="viewer"></div>
         <script src="mirador-2/mirador.min.js"></script>
         <script type="text/javascript">
-            function getUrlParameterByName(name, url) {
-                if (!url) url = window.location.href;
-                name = name.replace(/[\[\]]/g, "\\$&");
-                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
-                if (!results) return null;
-                if (!results[2]) return '';
-                return decodeURIComponent(results[2].replace(/\+/g, " "));
-            }
+            var getUrlParameter = function (sParam) {
+                var sPageURL = window.location.search.substring(1),
+                        sURLVariables = sPageURL.split('&'),
+                        sParameterName,
+                        i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                    }
+                }
+            };
+            var a = getUrlParameter('manifest');
+            var b = a ? decodeURIComponent(a) : "https://wellcomelibrary.org/iiif/b18035723/manifest";
             $(function () {
-                var a = getUrlParameterByName("manitest");
-                var b = (a === null) ? "https://wellcomelibrary.org/iiif/b18035723/manifest" : a;
                 myMiradorInstance = Mirador({
                     id: "viewer",
                     layout: "1x1",
                     buildPath: "mirador/",
                     data: [
-                        {manifestUri: b},
+                        {manifestUri: b}
                     ],
                     windowObjects: [{
-                        "loadedManifest" : b, 
-                        "viewType" : "ImageView"}],
+                            "loadedManifest": b,
+                            "viewType": "ImageView"}],
                     annotationEndpoint: {
                         name: "Local Storage",
                         module: "LocalStorageEndpoint"}

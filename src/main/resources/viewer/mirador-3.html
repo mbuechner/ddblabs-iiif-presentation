@@ -1,45 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    <title>Mirador</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-  </head>
-  <body>
-    <div id="mirador" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
-    <script>document.write("<script type='text/javascript' src='mirador-3/mirador.min.js?v=" + Date.now() + "'><\/script>");</script>
-    <script type="text/javascript">
-    function getUrlParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-     }
-     var a = getUrlParameterByName("manifest");
-     var b = (a === null) ? "https://wellcomelibrary.org/iiif/b18035723/manifest" : a;
-     var miradorInstance = Mirador.viewer({
-       id: 'mirador',
-       language: 'de',
-       workspaceControlPanel: {
-           enabled: false,
-       },
-       windows: [{
-         manifestId: b,
-         thumbnailNavigationPosition: 'far-bottom',
-       }],
-       window: {
-         panels: {
-           search: true,
-         }
-       },
-       manifests: {
-         b : {},
-       }
-     });
-    </script>
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#000000">
+        <title>Mirador</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    </head>
+    <body>
+        <div id="mirador" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
+        <script>document.write("<script type='text/javascript' src='mirador-3/mirador.min.js?v=" + Date.now() + "'><\/script>");</script>
+        <script type="text/javascript">
+            var getUrlParameter = function (sParam) {
+                var sPageURL = window.location.search.substring(1),
+                        sURLVariables = sPageURL.split('&'),
+                        sParameterName,
+                        i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                    }
+                }
+            };
+            var a = getUrlParameter('manifest');
+            var b = a ? decodeURIComponent(a) : "https://wellcomelibrary.org/iiif/b18035723/manifest";
+            var miradorInstance = Mirador.viewer({
+                id: 'mirador',
+                language: 'de',
+                workspaceControlPanel: {
+                    enabled: false
+                },
+                windows: [{
+                        manifestId: b,
+                        thumbnailNavigationPosition: 'far-bottom'
+                    }],
+                window: {
+                    panels: {
+                        search: true
+                    }
+                },
+                manifests: {
+                    b: {}
+                }
+            });
+        </script>
+    </body>
 </html>
