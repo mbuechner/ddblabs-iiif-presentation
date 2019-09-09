@@ -12,7 +12,6 @@
     <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.css" integrity="sha256-P45OhhEWm49G8sadt2n5rDaWLa3xZbDOQhJliuaojH0=" rel="stylesheet" />
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/flatly/bootstrap.min.css" integrity="sha384-T5jhQKMh96HMkXwqVMSjF3CmLcL1nT9//tCqu9By5XSdj7CwR0r+F3LTzUdfkkQf" rel="stylesheet" />
     <title>DDBlabs // IIIF Presentation API</title>
-    <base href="http://localhost" />
     <script src="https://cdn.jsdelivr.net/npm/vue"></script> @componentRegistration </head>
   <body>
     <br/>
@@ -161,11 +160,11 @@
                $("#mirador2link").removeClass("disabled");
                $("#mirador3link").attr("href", Vue.prototype.$javalin.state.baseurl + "/mirador-3.html?manifest=" + url);
                $("#mirador3link").removeClass("disabled");
-               $("#universalviewerlink").attr("href", "http://universalviewer.io/uv.html?manifest=" + url);
+               $("#universalviewerlink").attr("href", "https://universalviewer.io/uv.html?manifest=" + url);
                $("#universalviewerlink").removeClass("disabled");
-               $("#universalviewerdirectlink").attr("href", "http://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + url);
+               $("#universalviewerdirectlink").attr("href", "https://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + url);
 
-               $.getJSON("http://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + url, function(data) {
+               $.getJSON("https://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + url, function(data) {
                    if ($.isArray(data['error'])) {
                        var items = [];
                        $.each(data['error'], function(key, val) {

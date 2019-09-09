@@ -23,7 +23,7 @@
             f: "",
         }),
         created() {
-            fetch(Vue.prototype.$javalin.state.baseurl + "/api/browse?d=" + this.$route.query.d)
+            fetch(Vue.prototype.$javalin.state.baseurl + "/api/browse?d=" + (this.$route.query.d?this.$route.query.d:""))
                 .then(res => res.json())
                 .then(res => this.data = res)
                 .catch(() => alert("Error while fetching files"));

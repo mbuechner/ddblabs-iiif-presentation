@@ -132,8 +132,8 @@ public class Main {
             config.addStaticFiles(files, Location.EXTERNAL);
             config.addStaticFiles("/viewer");
             JavalinVue.stateFunction = (ctx -> {
-                return Map.of("baseurl", Configuration.get().getValue("iiif-presentation.base-url")); 
-            }); 
+                return Map.of("baseurl", Configuration.get().getValue("iiif-presentation.base-url"));
+            });
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -180,10 +180,10 @@ public class Main {
             ctx.contentType(ContentType.JSON).result(future);
         });
 
-        app.get("/api/configuration", ctx -> {  
+        app.get("/api/configuration", ctx -> {
             ctx.json(Configuration.get().getAllConfiguration());
         });
-                
+
         app.get("/api/browse", ctx -> {
 
             String d = ctx.queryParam("d", "");
@@ -239,7 +239,7 @@ public class Main {
         });
 
         app.get("/", ctx -> {
-            ctx.redirect("/browse");
+            ctx.redirect(Configuration.get().getValue("iiif-presentation.base-url") + "/browse");
         });
 
         final VueComponent vc = new VueComponent("<file-overview></file-overview>");

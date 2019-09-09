@@ -32,7 +32,7 @@ public class Configuration {
     private final static String PROPERTY_FILE_DEV = "/iiif-presentation.dev.cfg";
     private final static Configuration INSTANCE = new Configuration();
     private final static Properties PROPERTIES = new Properties();
-    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
 
     private Configuration() {
     }
