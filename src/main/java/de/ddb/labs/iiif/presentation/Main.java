@@ -41,7 +41,6 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import static java.util.Collections.singleton;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -69,6 +68,12 @@ public class Main {
     public Main() {
         // set System properties for pathes
         // get env and overwrite default configuration
+        if (System.getenv("iiif-presentation.base-url") != null) {
+            System.setProperty("iiif-presentation.base-url", System.getenv("iiif-presentation.base-url"));
+            Configuration.get().setValue("iiif-presentation.base-url", System.getenv("iiif-presentation.base-url"));
+        } else {
+            System.setProperty("iiif-presentation.base-url", Configuration.get().getValue("iiif-presentation.base-url"));
+        }
         if (System.getenv("iiif-presentation.git-url") != null) {
             System.setProperty("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));
             Configuration.get().setValue("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));

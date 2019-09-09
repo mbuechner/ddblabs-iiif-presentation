@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Configuration {
 
@@ -30,6 +32,7 @@ public class Configuration {
     private final static String PROPERTY_FILE_DEV = "/iiif-presentation.dev.cfg";
     private final static Configuration INSTANCE = new Configuration();
     private final static Properties PROPERTIES = new Properties();
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     private Configuration() {
     }
@@ -40,13 +43,13 @@ public class Configuration {
             // first try to load development properties
             try (final BufferedReader cfg = new BufferedReader(new InputStreamReader(Configuration.class.getResourceAsStream(PROPERTY_FILE_DEV), StandardCharsets.UTF_8))) {
                 PROPERTIES.load(cfg);
-                System.out.println("Configuration loaded from " + PROPERTY_FILE_DEV);
+                LOG.info("Configuration loaded from {}", PROPERTY_FILE_DEV);
             } catch (Exception e) {
                 try (final BufferedReader cfg = new BufferedReader(new InputStreamReader(Configuration.class.getResourceAsStream(PROPERTY_FILE), StandardCharsets.UTF_8))) {
                     PROPERTIES.load(cfg);
-                    System.out.println("Configuration loaded from " + PROPERTY_FILE);
+                    LOG.info("Configuration loaded from {}", PROPERTY_FILE);
                 } catch (IOException ex) {
-                    System.out.println("ERROR: Could not load configuration. " + ex.getMessage());
+                    LOG.error("ERROR: Could not load configuration. {}", ex.getMessage(), ex);
                 }
             }
         }
@@ -73,6 +76,7 @@ public class Configuration {
     }
 
     public void setValue(String key, String value) {
+        LOG.info("Set {} to {}", key, value);
         PROPERTIES.setProperty(key, value);
     }
 }
