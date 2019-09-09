@@ -19,7 +19,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.InvalidPropertiesFormatException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 public class Configuration {
@@ -32,7 +34,7 @@ public class Configuration {
     private Configuration() {
     }
 
-    public static Configuration get() throws InvalidPropertiesFormatException, IOException {
+    public static Configuration get() {
 
         if (PROPERTIES.isEmpty()) {
             // first try to load development properties
@@ -43,6 +45,8 @@ public class Configuration {
                 try (final BufferedReader cfg = new BufferedReader(new InputStreamReader(Configuration.class.getResourceAsStream(PROPERTY_FILE), StandardCharsets.UTF_8))) {
                     PROPERTIES.load(cfg);
                     System.out.println("Configuration loaded from " + PROPERTY_FILE);
+                } catch (IOException ex) {
+                    System.out.println("ERROR: Could not load configuration. " + ex.getMessage());
                 }
             }
         }
@@ -53,6 +57,15 @@ public class Configuration {
     public String[] getValueAsArray(String key, String split) {
         final String[] r = PROPERTIES.getProperty(key).split(split);
         return r == null ? new String[0] : r;
+    }
+
+    public Map<String, String> getAllConfiguration() {
+        final Map<String, String> m = new HashMap<>();
+        for (Entry e : PROPERTIES.entrySet()) {
+            m.put((String) e.getKey(), (String) e.getValue());
+        }
+        return m;
+
     }
 
     public String getValue(String key) {

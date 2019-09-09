@@ -2,9 +2,9 @@
     <div>
         <ul class="file-overview-list">
             <li v-for="file in data">
-                <a v-if="file.type === 'directory'" :href="`browse?d=${file.filenameWithPath}`">{{file.filename}}/</a>
-                <a v-else-if="file.type === 'file' && file.filenameWithPath === f" :href="`browse?d=${file.path}&f=${file.filenameWithPath}`" class="font-weight-bold">{{file.filename}}</a>                
-                <a v-else-if="file.type === 'file'" :href="`browse?d=${file.path}&f=${file.filenameWithPath}`">{{file.filename}}</a>
+                <a v-if="file.type === 'directory'" :href="`${Vue.prototype.$javalin.state.baseurl}/browse?d=${file.filenameWithPath}`">{{file.filename}}/</a>
+                <a v-else-if="file.type === 'file' && file.filenameWithPath === f" :href="`${Vue.prototype.$javalin.state.baseurl}/browse?d=${file.path}&f=${file.filenameWithPath}`" class="font-weight-bold">{{file.filename}}</a>                
+                <a v-else-if="file.type === 'file'" :href="`${Vue.prototype.$javalin.state.baseurl}/browse?d=${file.path}&f=${file.filenameWithPath}`">{{file.filename}}</a>
             </li>
         </ul>
     </div>
@@ -23,7 +23,7 @@
             f: "",
         }),
         created() {
-            fetch("/api/browse?d=" + (this.$route.query.d?this.$route.query.d:""))
+            fetch(Vue.prototype.$javalin.state.baseurl + "/api/browse?d=" + this.$route.query.d)
                 .then(res => res.json())
                 .then(res => this.data = res)
                 .catch(() => alert("Error while fetching files"));

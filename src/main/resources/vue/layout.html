@@ -145,7 +145,7 @@
            if (getUrlParameter('f')) {
 
                // show JSON source code
-               $("#manifestPre").load("api/file?f=" + getUrlParameter('f'),
+               $("#manifestPre").load(Vue.prototype.$javalin.state.baseurl + "/api/file?f=" + getUrlParameter('f'),
                    function(responseText, textStatus, XMLHttpRequest) {
                        if (textStatus !== "success") {
                           $("#manifest-errors").html($.parseJSON(responseText)['message'].replace(/\n/g, "<br />"));
@@ -154,12 +154,12 @@
                    });
 
                // validation
-               var url = $("base").attr("href") + "/api/file?f=" + getUrlParameter('f');
+               var url = Vue.prototype.$javalin.state.baseurl + "/api/file?f=" + getUrlParameter('f');
                url = encodeURIComponent(url);
 
-               $("#mirador2link").attr("href", "/mirador-2.html?manifest=" + url);
+               $("#mirador2link").attr("href", Vue.prototype.$javalin.state.baseurl + "/mirador-2.html?manifest=" + url);
                $("#mirador2link").removeClass("disabled");
-               $("#mirador3link").attr("href", "/mirador-3.html?manifest=" + url);
+               $("#mirador3link").attr("href", Vue.prototype.$javalin.state.baseurl + "/mirador-3.html?manifest=" + url);
                $("#mirador3link").removeClass("disabled");
                $("#universalviewerlink").attr("href", "http://universalviewer.io/uv.html?manifest=" + url);
                $("#universalviewerlink").removeClass("disabled");

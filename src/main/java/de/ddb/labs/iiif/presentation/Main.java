@@ -19,7 +19,9 @@ package de.ddb.labs.iiif.presentation;
  *
  * @author Michael Büchner <m.buechner@dnb.de>
  */
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -28,6 +30,7 @@ import io.javalin.plugin.rendering.vue.VueComponent;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.json.JavalinJackson;
 import io.javalin.plugin.openapi.annotations.ContentType;
+import io.javalin.plugin.rendering.vue.JavalinVue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -38,6 +41,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import static java.util.Collections.singleton;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -55,42 +59,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     private Path folder;
     private Git git;
     private ObjectId oIdOfLastCommit;
     private ObjectMapper mapper = new ObjectMapper();
-    
+
     public Main() {
-        try {
-            // set System properties for pathes
-            // get env and overwrite default configuration
-            if (System.getenv("iiif-presentation.git-url") != null) {
-                System.setProperty("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));
-                Configuration.get().setValue("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));
-            } else {
-                System.setProperty("iiif-presentation.git-url", Configuration.get().getValue("iiif-presentation.git-url"));
-            }
-            if (System.getenv("iiif-presentation.git-branch") != null) {
-                System.setProperty("iiif-presentation.git-branch", System.getenv("iiif-presentation.git-branch"));
-                Configuration.get().setValue("iiif-presentation.git-branch", System.getenv("iiif-presentation.git-branch"));
-            } else {
-                System.setProperty("iiif-presentation.git-branch", Configuration.get().getValue("iiif-presentation.git-branch"));
-            }
-            if (System.getenv("iiif-presentation.folder") != null) {
-                System.setProperty("iiif-presentation.folder", System.getenv("iiif-presentation.folder"));
-                Configuration.get().setValue("iiif-presentation.folder", System.getenv("iiif-presentation.folder"));
-            } else {
-                System.setProperty("iiif-presentation.folder", Configuration.get().getValue("iiif-presentation.folder"));
-            }
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-            System.exit(-1);
+        // set System properties for pathes
+        // get env and overwrite default configuration
+        if (System.getenv("iiif-presentation.git-url") != null) {
+            System.setProperty("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));
+            Configuration.get().setValue("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));
+        } else {
+            System.setProperty("iiif-presentation.git-url", Configuration.get().getValue("iiif-presentation.git-url"));
+        }
+        if (System.getenv("iiif-presentation.git-branch") != null) {
+            System.setProperty("iiif-presentation.git-branch", System.getenv("iiif-presentation.git-branch"));
+            Configuration.get().setValue("iiif-presentation.git-branch", System.getenv("iiif-presentation.git-branch"));
+        } else {
+            System.setProperty("iiif-presentation.git-branch", Configuration.get().getValue("iiif-presentation.git-branch"));
+        }
+        if (System.getenv("iiif-presentation.folder") != null) {
+            System.setProperty("iiif-presentation.folder", System.getenv("iiif-presentation.folder"));
+            Configuration.get().setValue("iiif-presentation.folder", System.getenv("iiif-presentation.folder"));
+        } else {
+            System.setProperty("iiif-presentation.folder", Configuration.get().getValue("iiif-presentation.folder"));
         }
         // make local folder
         try {
-            folder = Path.of("d:\\GitHub\\ddblabs-iiif-presentation-files\\");
+            // folder = Path.of("d:\\GitHub\\ddblabs-iiif-presentation-files");
             folder = Files.createTempDirectory("iiif-image-git");
         } catch (IOException ex) {
             LOG.warn(ex.getMessage());
@@ -103,7 +102,7 @@ public class Main {
             LOG.error(ex.getMessage(), ex);
         }
     }
-    
+
     public static void main(String[] args) {
         try {
             new Main().start();
@@ -112,26 +111,30 @@ public class Main {
             System.exit(-1);
         }
     }
-    
+
     private void start() throws Exception {
-        
+
         final String files = folder.toString() + File.separator + Configuration.get().getValue("iiif-presentation.folder");
-        
+
         JavalinJackson.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         JavalinJackson.getObjectMapper().enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
-        
+        JavalinJackson.getObjectMapper().setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+
         final Javalin app = Javalin.create(config -> {
             config.enableCorsForAllOrigins();
             config.autogenerateEtags = true;
             config.showJavalinBanner = false;
             config.addStaticFiles(files, Location.EXTERNAL);
             config.addStaticFiles("/viewer");
+            JavalinVue.stateFunction = (ctx -> {
+                return Map.of("baseurl", Configuration.get().getValue("iiif-presentation.base-url")); 
+            }); 
         });
-        
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             app.stop();
         }));
-        
+
         app.events(event -> {
             event.serverStopping(() -> {
                 if (git != null) {
@@ -139,25 +142,25 @@ public class Main {
                 }
                 FileUtils.deleteQuietly(folder.toFile());
             });
-            
+
         });
 
         // set UTF-8 as default charset
         app.before(ctx -> {
             ctx.res.setCharacterEncoding("UTF-8");
         });
-        
+
         app.get("/api/file", ctx -> {
-            
+
             String f = ctx.queryParam("f", "");
             if (f != null && !f.isEmpty()) {
                 f = f.replaceAll("\\.\\." + StringEscapeUtils.escapeJava(File.separator) + "|\\.\\./", "");
                 f = StringUtils.strip(f, File.separator + "/");
                 f += File.separator;
             }
-            
+
             final Path file = Path.of(folder.toString() + File.separator + f);
-            
+
             final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
                 try {
                     final JsonNode rootNode = mapper.readTree(file.toFile());
@@ -171,9 +174,13 @@ public class Main {
             });
             ctx.contentType(ContentType.JSON).result(future);
         });
-        
+
+        app.get("/api/configuration", ctx -> {  
+            ctx.json(Configuration.get().getAllConfiguration());
+        });
+                
         app.get("/api/browse", ctx -> {
-            
+
             String d = ctx.queryParam("d", "");
             if (d != null && !d.isEmpty()) {
                 d = StringUtils.endsWith(d, "\\/") ? d : d + File.separator;
@@ -186,11 +193,11 @@ public class Main {
             final Path b = Path.of(folder.toString() + File.separator + d);
             final PathMatcher jsonMatcher = FileSystems.getDefault().getPathMatcher("glob:*.json");
             Path localFolder = folder;
-            
+
             if (Files.exists(b, LinkOption.NOFOLLOW_LINKS)
                     && Files.isDirectory(b, LinkOption.NOFOLLOW_LINKS)
                     && Files.isReadable(b)) {
-                
+
                 localFolder = b;
             }
 
@@ -204,11 +211,11 @@ public class Main {
                 }
             };
             final Predicate<Path> endsWithJson = e -> jsonMatcher.matches(e.getFileName());
-            
+
             final Predicate<Path> filterGit = e -> {
                 return e.getFileName().toString().equals(".git");
             };
-            
+
             final List<Path> filePathes = Files.list(localFolder)
                     //.map(Path::getName)
                     //.map(Path::toString)
@@ -217,27 +224,29 @@ public class Main {
                     .filter(endsWithJson.or(isDirectory))
                     .sorted()
                     .collect(Collectors.toList());
-            
+
             final List<IiifFile> fles = new ArrayList<>();
             for (Path filePath : filePathes) {
                 fles.add(new IiifFile(filePath));
             }
             ctx.json(fles);
-            
+
         });
-        
+
         app.get("/", ctx -> {
             ctx.redirect("/browse");
         });
-        
-        app.get("/browse", new VueComponent("<file-overview></file-overview>"));
+
+        final VueComponent vc = new VueComponent("<file-overview></file-overview>");
+
+        app.get("/browse", vc);
         // app.get("/messages/:user", new VueComponent("<thread-view></thread-view>"));
 
         app.start(80);
     }
-    
+
     private void clone(Path folder) throws IOException, GitAPIException {
-        
+
         LOG.info("Clone Branch " + Configuration.get().getValue("iiif-presentation.git-branch") + " von " + Configuration.get().getValue("iiif-presentation.git-url") + "...");
         try {
             git = Git.cloneRepository()
@@ -251,29 +260,29 @@ public class Main {
             LOG.error(e.getMessage());
         }
     }
-    
+
     private void pullRepository() throws IncorrectObjectTypeException, GitAPIException, IOException {
-        
+
         final Map<String, Ref> map = Git.lsRemoteRepository()
                 .setHeads(true)
                 .setTags(true)
                 .setRemote(Configuration.get().getValue("iiif-presentation.git-url"))
                 .callAsMap();
-        
+
         final Ref commit = map.get(Configuration.get().getValue("iiif-presentation.git-branch"));
         final ObjectId oId = commit.getObjectId();
-        
+
         if (oId != null && !oId.equals(oIdOfLastCommit) && git != null) {
             git.pull();
             oIdOfLastCommit = oId;
             LOG.info("ObjectId of last commit is now: {}", oIdOfLastCommit);
         }
     }
-    
+
     public class IiifFile {
-        
+
         private Path name;
-        
+
         public IiifFile(Path name) {
             this.name = name;
         }
@@ -297,22 +306,22 @@ public class Main {
          * @return the name
          */
         public String getFilename() {
-            
+
             return name.getFileName().toString();
         }
-        
+
         public String getFilenameWithPath() {
             return StringUtils.strip(name.toString().replace(folder.toString(), ""), "\\/");
         }
-        
+
         public String getPath() {
             return StringUtils.strip(getFilenameWithPath().replace(getFilename(), ""), "\\/");
         }
-        
+
         public String getType() {
             return (Files.isDirectory(name, LinkOption.NOFOLLOW_LINKS)) ? "directory" : "file";
         }
-        
+
         public long getSize() {
             return name.toFile().length();
         }
@@ -324,5 +333,5 @@ public class Main {
             this.name = name;
         }
     }
-    
+
 }
