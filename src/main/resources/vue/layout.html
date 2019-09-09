@@ -8,19 +8,20 @@
     <meta content="Michael Büchner" name="author" />
     <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism-coy.min.css" integrity="sha256-1VOeW3bLzHmS11IR0Cl73suNyhliqnse4BTuwGs4IUg=" rel="stylesheet" />
     <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.css" integrity="sha256-Afz2ZJtXw+OuaPX10lZHY7fN1+FuTE/KdCs+j7WZTGc=" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/autolinker/prism-autolinker.css" integrity="sha256-XSe4RxMoG3IUoQolUocyPhVM7X8arKQZTphmZlI89ss=" crossorigin="anonymous" />
     <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/toolbar/prism-toolbar.min.css" integrity="sha256-P45OhhEWm49G8sadt2n5rDaWLa3xZbDOQhJliuaojH0=" rel="stylesheet" />
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/flatly/bootstrap.min.css" integrity="sha384-T5jhQKMh96HMkXwqVMSjF3CmLcL1nT9//tCqu9By5XSdj7CwR0r+F3LTzUdfkkQf" rel="stylesheet" />
     <title>DDBlabs // IIIF Presentation API</title>
     <base href="http://localhost" />
     <script src="https://cdn.jsdelivr.net/npm/vue"></script> @componentRegistration </head>
   <body>
-    <br />
-    <div class="container">
+    <br/>
+    <div class="container-fluid">
       <div class="jumbotron">
-        <h1 class="display-4">
-          <a href="https://labs.ddb.de/app/ddbmeme" style="text-decoration: none;">IIIF Presentation API</a>
+        <h1 class="display-4 text-truncate">
+          <a id="headerurl" href="#" style="text-decoration: none;">IIIF Presentation API</a>
         </h1>
-        <p class="lead">Test- und Entwicklungsumgebung für DDBlabs</p>
+        <p class="lead text-truncate">Test- und Entwicklungsumgebung für DDBlabs</p>
         <hr class="my-4" />
         <div class="row">
           <div class="col-md-4 order-md-2 mb-4">
@@ -60,21 +61,6 @@
               <!-- Accordion card -->
               <div class="card">
                 <!-- Card header -->
-                <div class="card-header" id="headingOne1" role="tab">
-                  <a aria-controls="collapseOne1" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1" id="manifestlink">
-                    <h6 class="mb-0">Manifest</h6>
-                  </a>
-                </div>
-                <!-- Card body -->
-                <div aria-labelledby="headingOne1" class="collapse" data-parent="#accordionEx" id="collapseOne1" role="tabpanel">
-                  <div class="card-body">
-                    <pre class="line-numbers"><code class="language-json" id="manifestPre"></code></pre>
-                  </div>
-                </div>
-              </div>
-              <!-- Accordion card -->
-              <div class="card">
-                <!-- Card header -->
                 <div class="card-header" id="headingTwo2" role="tab">
                   <a aria-controls="collapseTwo2" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo2" id="validatorlink">
                     <h6 class="mb-0">Presentation API Validator</h6>
@@ -98,6 +84,26 @@
                   </div>
                 </div>
               </div>
+              <!-- Accordion card -->
+              <div class="card">
+                <!-- Card header -->
+                <div class="card-header" id="headingOne1" role="tab">
+                  <a aria-controls="collapseOne1" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1" id="manifestlink">
+                    <h6 class="mb-0">Manifest</h6>
+                  </a>
+                </div>
+                <!-- Card body -->
+                <div aria-labelledby="headingOne1" class="collapse" data-parent="#accordionEx" id="collapseOne1" role="tabpanel">
+                  <div class="card-body">
+                        <div class="alert alert-danger hidden" role="alert">
+                            <h4 class="alert-heading">Errors</h4>
+                            <hr />
+                            <p class="mb-0" id="manifest-errors">Aww yeah, no errors so far!</p>
+                        </div>
+                    <pre class="line-numbers"><code class="language-json" id="manifestPre"></code></pre>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- main -->
           </div>
@@ -111,9 +117,12 @@
     <script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Y+Budm2wBEjYjbH0qcJRmLuRBFpXd0VKxl6XhdS4hgA=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-core.min.js"></script>
     <script crossorigin="anonymous" integrity="sha256-ht8ay6ZTPZfuixYB99I5oRpCLsCq7Do2LjEYLwbe+X8=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/autolinker/prism-autolinker.min.js" integrity="sha256-Qfxn8KLcPNmSqfiY/b9HKceQvP0g9EXwiDHDCcgfC2k=" crossorigin="anonymous"></script>
     <script crossorigin="anonymous" integrity="sha256-hep5s8952MqR7Y79JYfCXZD6vQjVHs7sOu/ZGrs1OEQ=" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.js"></script>
     <script>
         $(document).ready(function() {
+           
+           $("#headerurl").attr("href", $("base").attr("href"));       
            new Vue({
                el: "#main-vue"
            });
@@ -138,9 +147,10 @@
                // show JSON source code
                $("#manifestPre").load("api/file?f=" + getUrlParameter('f'),
                    function(responseText, textStatus, XMLHttpRequest) {
-                       if (textStatus === "success") {
-                           $("#manifestlink").removeClass("disabled");
+                       if (textStatus !== "success") {
+                          $("#manifest-errors").html($.parseJSON(responseText)['message'].replace(/\n/g, "<br />"));
                        }
+                       $("#manifestlink").removeClass("disabled");
                    });
 
                // validation
