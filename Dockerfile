@@ -4,7 +4,7 @@ COPY src /tmp/src/
 WORKDIR /tmp/
 RUN mvn package
 
-FROM openjdk:12
+FROM openjdk:12-alpine
 RUN mkdir /home/iiif-presentation
 COPY --from=MAVEN_CHAIN /tmp/target/iiif-presentation.jar /home/iiif-presentation/iiif-presentation.jar
 WORKDIR /home/iiif-presentation/
