@@ -10,6 +10,6 @@ COPY --from=MAVEN_CHAIN /tmp/target/iiif-presentation.jar /home/iiif-presentatio
 WORKDIR /home/iiif-presentation/
 CMD ["java", "-jar", "iiif-presentation.jar"]
 
-HEALTHCHECK --interval=1m --timeout=3s CMD wget --quiet --tries=1 --spider http://localhost/ || exit
+# HEALTHCHECK --interval=1m --timeout=3s CMD wget --quiet --tries=1 --spider http://localhost/ || exit
 
 EXPOSE 80
