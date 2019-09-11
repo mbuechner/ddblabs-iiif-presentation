@@ -26,6 +26,10 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author Michael Büchner <m.buechner@dnb.de>
+ */
 public class Configuration {
 
     private final static String PROPERTY_FILE = "/iiif-presentation.cfg";
@@ -37,6 +41,10 @@ public class Configuration {
     private Configuration() {
     }
 
+    /**
+     * Get configuration instance
+     * @return 
+     */
     public static Configuration get() {
 
         if (PROPERTIES.isEmpty()) {
