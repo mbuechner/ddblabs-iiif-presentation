@@ -48,6 +48,10 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +63,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.security.MessageDigest;
 
 public class Main {
 
@@ -67,34 +72,23 @@ public class Main {
     private Git git;
     private ObjectId oIdOfLastCommit;
     private ObjectMapper mapper = new ObjectMapper();
+    private final static List<String> ENV = new ArrayList<>() {
+        {
+            add("iiif-presentation.base-url");
+            add("iiif-presentation.git-url");
+            add("iiif-presentation.git-branch");
+            add("iiif-presentation.folder");
+            add("iiif-presentation.webhook-secret");
+        }
+    };
 
     public Main() {
         // set System properties for pathes
         // get env and overwrite default configuration
-        if (System.getenv("iiif-presentation.base-url") != null) {
-            System.setProperty("iiif-presentation.base-url", System.getenv("iiif-presentation.base-url"));
-            Configuration.get().setValue("iiif-presentation.base-url", System.getenv("iiif-presentation.base-url"));
-        } else {
-            System.setProperty("iiif-presentation.base-url", Configuration.get().getValue("iiif-presentation.base-url"));
+        for (String e : ENV) {
+            setEnvironmentVariable(e);
         }
-        if (System.getenv("iiif-presentation.git-url") != null) {
-            System.setProperty("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));
-            Configuration.get().setValue("iiif-presentation.git-url", System.getenv("iiif-presentation.git-url"));
-        } else {
-            System.setProperty("iiif-presentation.git-url", Configuration.get().getValue("iiif-presentation.git-url"));
-        }
-        if (System.getenv("iiif-presentation.git-branch") != null) {
-            System.setProperty("iiif-presentation.git-branch", System.getenv("iiif-presentation.git-branch"));
-            Configuration.get().setValue("iiif-presentation.git-branch", System.getenv("iiif-presentation.git-branch"));
-        } else {
-            System.setProperty("iiif-presentation.git-branch", Configuration.get().getValue("iiif-presentation.git-branch"));
-        }
-        if (System.getenv("iiif-presentation.folder") != null) {
-            System.setProperty("iiif-presentation.folder", System.getenv("iiif-presentation.folder"));
-            Configuration.get().setValue("iiif-presentation.folder", System.getenv("iiif-presentation.folder"));
-        } else {
-            System.setProperty("iiif-presentation.folder", Configuration.get().getValue("iiif-presentation.folder"));
-        }
+
         // make local folder
         try {
             // folder = Path.of("d:\\GitHub\\ddblabs-iiif-presentation-files");
@@ -268,20 +262,35 @@ public class Main {
         });
 
         app.post("/api/update", ctx -> {
-            LOG.info("Header received: {}", StringUtils.join(ctx.headerMap()));
-            LOG.info("Body received: {}", ctx.body());
-            ctx.status(202);
+            final String payload = ctx.body();
+            LOG.info("Payload received: {}", payload);
+
+            final String secret = Configuration.get().getValue("iiif-presentation.webhook-secret");
+            LOG.info("Secret configured: {}", secret);
+
+            final String signatureTransmitted = ctx.header("X-Hub-Signature");
+            LOG.info("X-Hub-Signature received: {}", signatureTransmitted);
+
+            final String signatureComputed = new HmacUtils(HmacAlgorithms.HMAC_SHA_1, secret).hmacHex(payload);
+            LOG.info("X-Hub-Signature computed: {}", signatureComputed);
+
+            if (signatureTransmitted != null
+                    && signatureComputed != null
+                    && MessageDigest.isEqual(signatureTransmitted.replace("sha1=", "").getBytes(), signatureComputed.getBytes())) {
+                LOG.info("All right! Let's do a GIT PULL...");
+                pullRepository(); // get newest files
+                ctx.status(200);
+            } else {
+                LOG.warn("Webhook update NOT sucessfull.");
+                ctx.status(400);
+            }
+
         });
 
         app.get("/", ctx -> {
             ctx.redirect(Configuration.get().getValue("iiif-presentation.base-url") + "/browse");
         });
-
-        final VueComponent vc = new VueComponent("<file-overview></file-overview>");
-
-        app.get("/browse", vc);
-        // app.get("/messages/:user", new VueComponent("<thread-view></thread-view>"));
-
+        app.get("/browse", new VueComponent("<file-overview></file-overview>"));
         app.start(80);
     }
 
@@ -298,6 +307,15 @@ public class Main {
             pullRepository();
         } catch (IOException | GitAPIException e) {
             LOG.error(e.getMessage());
+        }
+    }
+
+    private void setEnvironmentVariable(String varName) {
+        if (System.getenv(varName) != null) {
+            System.setProperty(varName, System.getenv(varName));
+            Configuration.get().setValue(varName, System.getenv(varName));
+        } else {
+            System.setProperty(varName, Configuration.get().getValue(varName));
         }
     }
 
