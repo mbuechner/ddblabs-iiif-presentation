@@ -268,6 +268,7 @@ public class Main {
         });
 
         app.post("/api/update", ctx -> {
+            LOG.info("Header received: {}", StringUtils.join(ctx.headerMap()));
             LOG.info("Body received: {}", ctx.body());
             ctx.status(202);
         });
