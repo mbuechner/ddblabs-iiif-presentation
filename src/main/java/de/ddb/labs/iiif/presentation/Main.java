@@ -265,23 +265,28 @@ public class Main {
             final String payload = ctx.body();
             LOG.info("Payload received: {}", payload);
 
-            final String secret = Configuration.get().getValue("iiif-presentation.webhook-secret");
-            LOG.info("Secret configured: {}", secret);
+            final String event = ctx.header("X-Github-Event");
+            LOG.info("X-Github-Event received: {} (must be \"push\")", event);
 
             final String signatureTransmitted = ctx.header("X-Hub-Signature");
             LOG.info("X-Hub-Signature received: {}", signatureTransmitted);
 
+            final String secret = Configuration.get().getValue("iiif-presentation.webhook-secret");
+            LOG.info("Secret configured: {}", secret);
+
             final String signatureComputed = new HmacUtils(HmacAlgorithms.HMAC_SHA_1, secret).hmacHex(payload);
-            LOG.info("X-Hub-Signature computed: {}", signatureComputed);
+            LOG.info("X-Hub-Signature computed: {} (must be equal to \"X-Hub-Signature received\")", signatureComputed);
 
             if (signatureTransmitted != null
                     && signatureComputed != null
-                    && MessageDigest.isEqual(signatureTransmitted.replace("sha1=", "").getBytes(), signatureComputed.getBytes())) {
+                    && MessageDigest.isEqual(signatureTransmitted.replace("sha1=", "").getBytes(), signatureComputed.getBytes())
+                    && event != null
+                    && event.equalsIgnoreCase("push")) {
                 LOG.info("All right! Let's do a GIT PULL...");
                 pullRepository(); // get newest files
                 ctx.status(200);
             } else {
-                LOG.warn("Webhook update NOT sucessfull.");
+                LOG.warn("Did not do a GIT PULL!");
                 ctx.status(400);
             }
 
