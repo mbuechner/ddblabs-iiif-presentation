@@ -78,6 +78,13 @@
             <version>1.7</version>
             <type>jar</type>
         </dependency>
+        <!-- Markdown -->
+        <dependency>
+            <groupId>es.nitaur.markdown</groupId>
+            <artifactId>txtmark</artifactId>
+            <version>0.16</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <finalName>iiif-presentation</finalName>        

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.rjeschke.txtmark.Processor;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.vue.VueComponent;
 import io.javalin.http.staticfiles.Location;
@@ -33,6 +34,7 @@ import io.javalin.plugin.openapi.annotations.ContentType;
 import io.javalin.plugin.rendering.vue.JavalinVue;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -47,6 +49,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.jgit.api.Git;
@@ -157,24 +160,23 @@ public class Main {
 
         app.get("/api/file", ctx -> {
 
-            String f = ctx.queryParam("f", "");
-            if (f != null && !f.isEmpty()) {
-                f = f.replaceAll("\\.\\." + StringEscapeUtils.escapeJava(File.separator) + "|\\.\\./", "");
-                f = StringUtils.strip(f, File.separator + "/");
-                f += File.separator;
-            }
-
-            final Path file = Path.of(folder.toString() + File.separator + f);
-
             final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+                String f = ctx.queryParam("f", "");
+                if (f != null && !f.isEmpty()) {
+                    f = f.replaceAll("\\.\\." + StringEscapeUtils.escapeJava(File.separator) + "|\\.\\./", "");
+                    f = StringUtils.strip(f, File.separator + "/");
+                    f += File.separator;
+                }
+
+                final Path file = Path.of(folder.toString() + File.separator + f);
                 try {
                     final JsonNode rootNode = mapper.readTree(file.toFile());
                     final String r = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
                     ctx.status(200);
                     return r;
                 } catch (IOException ex) {
-                    ctx.status(500);
-                    return String.format("{\"error\":\"500\",\"message\": \"%s\"}", StringEscapeUtils.escapeJson(ex.getMessage()));
+                    ctx.status(404);
+                    return String.format("{\"error\":\"404\",\"message\": \"%s\"}", StringEscapeUtils.escapeJson(ex.getMessage()));
                 }
             });
             ctx.contentType(ContentType.JSON).result(future);
@@ -235,7 +237,39 @@ public class Main {
                 fles.add(new IiifFile(filePath));
             }
             ctx.json(fles);
+        });
 
+        app.get("/api/description", ctx -> {
+
+            final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+                String f = ctx.queryParam("f", "");
+                if (f != null && !f.isEmpty()) {
+                    f = f.replaceAll("\\.\\." + StringEscapeUtils.escapeJava(File.separator) + "|\\.\\./", "");
+                    f = StringUtils.strip(f, File.separator + "/");
+                    f = FilenameUtils.removeExtension(f);
+                    f += ".md";
+                } else {
+                    return String.format("{\"error\":\"500\",\"message\": \"%s\"}", "No file given");
+                }
+
+                final Path file = Path.of(folder.toString() + File.separator + f);
+                try {
+                    final String r = FileUtils.readFileToString(file.toFile(), Charset.forName("UTF-8"));
+                    final String m = Processor.process(r);
+                    final String j = JavalinJackson.INSTANCE.toJson(Map.of("content", m));
+                    ctx.status(200);
+                    return j;
+                } catch (IOException ex) {
+                    ctx.status(404);
+                    return String.format("{\"error\":\"404\",\"message\": \"%s\"}", StringEscapeUtils.escapeJson(ex.getMessage()));
+                }
+            });
+            ctx.contentType(ContentType.JSON).result(future);
+        });
+
+        app.post("/api/update", ctx -> {
+            LOG.info("Body received: {}", ctx.body());
+            ctx.status(202);
         });
 
         app.get("/", ctx -> {
