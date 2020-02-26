@@ -52,6 +52,13 @@
                         </div>
                         <small class="text-muted">Öffnet das Manifest mit dem Universal Viewer 2</small>
                     </a>
+                    <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#"
+                       id="tify" target="_blank">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">TIFY</h6>
+                        </div>
+                        <small class="text-muted">Öffnet das Manifest mit dem TIFY Viewer</small>
+                    </a>
                 </div>
             </div>
             <div class="col-md-8 order-md-1" id="main-vue">
@@ -229,6 +236,9 @@
                 .removeClass("disabled");
             $("#universalviewerlink")
                 .attr("href", "https://universalviewer.io/uv.html?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
+                .removeClass("disabled");
+            $("#tify")
+                .attr("href", "https://demo.tify.rocks/demo.html?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
                 .removeClass("disabled");
             $("#universalviewerdirectlink").attr("href", "https://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000));
 
