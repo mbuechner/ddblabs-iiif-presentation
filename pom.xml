@@ -43,7 +43,7 @@
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
-            <version>3.4.1</version>
+            <version>3.8.0</version>
             <type>jar</type>
         </dependency>
         <!-- Logging with Logback -->
@@ -56,13 +56,13 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.4.2.201908231537-r</version>
+            <version>5.7.0.202003110725-r</version>
         </dependency>
         <!-- JSON-Handling with Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.9.3</version>
+            <version>2.10.3</version>
         </dependency>
         <!-- Apache Commons IO -->
         <dependency>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
             <type>jar</type>
         </dependency>
         <!-- Markdown -->
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.12</version>
+            <version>1.14</version>
             <type>jar</type>
         </dependency>
     </dependencies>
@@ -122,7 +122,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.8.2</version>
+                <version>3.9.0</version>
                 <configuration>
                     <outputDirectory>${basedir}/docs</outputDirectory>
                 </configuration>
@@ -135,7 +135,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
