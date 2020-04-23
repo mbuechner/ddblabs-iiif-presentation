@@ -5,14 +5,10 @@
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
         <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
         <meta content="Michael Büchner" name="author"/>
-        <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/spacelab/bootstrap.min.css"
-              integrity="sha384-sZG5VVk41YqhJjYXgJFoRVd3d2AdDgy4oyIytQJMGx/Mizz1N+5bgKQBSCGfKQnP" rel="stylesheet">
-            <title>IIIF Presentation API | DDBlabs</title>
-            <script crossorigin="anonymous"
-                    integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY="
-            src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
-            <script crossorigin="anonymous" integrity="sha256-1Dr3ChysPawKq+arX2+sLoxyI/H6m4UVJWZOtvKdeQ8="
-            src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.1.3/vue-router.js"></script>
+        <title>IIIF Presentation API | DDBlabs</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+            <script crossorigin="anonymous" integrity="sha256-ngFW3UnAN0Tnm76mDuu7uUtYEcG3G5H1+zioJw3t+68=" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+            <script crossorigin="anonymous" integrity="sha256-1Dr3ChysPawKq+arX2+sLoxyI/H6m4UVJWZOtvKdeQ8=" src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.1.3/vue-router.js"></script>
             @componentRegistration
     </head>
     <body>
@@ -31,38 +27,32 @@
                             <!-- <span class="badge badge-secondary badge-pill">3</span> -->
                         </h4>
                         <div class="list-group">
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#"
-                               id="mirador2link" target="_blank">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="mirador2link" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Mirador 2.7.0</h6>
                                 </div>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#"
-                               id="mirador3link" target="_blank">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="mirador3link" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Mirador 3.0.0-beta.6</h6>
                                 </div>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#"
-                               id="divajs" target="_blank">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="divajs" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Diva.js Viewer 6.0.2</h6>
                                 </div>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#"
-                               id="universalviewerlink" target="_blank">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="universalviewerlink" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Universal Viewer 2 (ext.)</h6>
                                 </div>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#"
-                               id="curation" target="_blank">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="curation" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">IIIF Curation Viewer (ext.)</h6>
                                 </div>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#"
-                               id="tify" target="_blank">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="tify" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">TIFY (ext.)</h6>
                                 </div>
@@ -70,44 +60,44 @@
                         </div>
                     </div>
                     <div class="col-md-8 order-md-1" id="main-vue">
-                        <h4 class="mb-3">Dateien</h4> @routeComponent
+                        <h4 class="mb-3">Dateien</h4>
+                        @routeComponent
                     </div>
                     <!-- row -->
                 </div>
                 <div class="row">
-                    <div class="col-md-12 order-md-12" id="main-code">
+                    <div
+                        class="col-md-12 order-md-12" id="main-code">
                         <!--Accordion wrapper-->
-                        <div aria-multiselectable="true" class="accordion md-accordion" id="accordionEx" role="tablist">
+                        <div
+                            aria-multiselectable="true" class="accordion md-accordion" id="accordionEx" role="tablist">
                             <!-- Accordion card -->
-                            <div class="card">
+                            <div
+                                class="card">
                                 <!-- Card header -->
                                 <div class="card-header" id="headingTwo3" role="tab">
-                                    <a aria-controls="collapseTwo3" aria-expanded="false" class="nav-link disabled"
-                                       data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo3"
-                                       id="descriptionlink">
+                                    <a aria-controls="collapseTwo3" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo3" id="descriptionlink">
                                         <h6 class="mb-0">Beschreibung</h6>
                                     </a>
                                 </div>
                                 <!-- Card body -->
-                                <div aria-labelledby="headingTwo3" class="collapse" data-parent="#accordionEx" id="collapseTwo3"
-                                     role="tabpanel">
-                                    <div class="card-body" id="descriptiontext">
+                                <div aria-labelledby="headingTwo3" class="collapse" data-parent="#accordionEx" id="collapseTwo3" role="tabpanel">
+                                    <div class="card-body">
+                                        <p id="descriptiontext"></p>
                                     </div>
                                 </div>
                             </div>
                             <!-- Accordion card -->
-                            <div class="card">
+                            <div
+                                class="card">
                                 <!-- Card header -->
                                 <div class="card-header" id="headingTwo2" role="tab">
-                                    <a aria-controls="collapseTwo2" aria-expanded="false" class="nav-link disabled"
-                                       data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo2"
-                                       id="validatorlink">
+                                    <a aria-controls="collapseTwo2" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo2" id="validatorlink">
                                         <h6 class="mb-0">Presentation API-Validator</h6>
                                     </a>
                                 </div>
                                 <!-- Card body -->
-                                <div aria-labelledby="headingTwo2" class="collapse" data-parent="#accordionEx" id="collapseTwo2"
-                                     role="tabpanel">
+                                <div aria-labelledby="headingTwo2" class="collapse" data-parent="#accordionEx" id="collapseTwo2" role="tabpanel">
                                     <div class="card-body">
                                         <div class="alert alert-danger d-none" id="validatorerrors" role="alert">
                                             <h4 class="alert-heading">Fehler</h4>
@@ -119,38 +109,42 @@
                                             <hr/>
                                             <p class="mb-0" id="validation-warnings">Keine Fehler :-)</p>
                                         </div>
-                                        <a aria-pressed="true" class="btn btn-primary"
-                                           href="https://iiif.io/api/presentation/validator/service/" role="button"
-                                           target="_blank">Validation Service</a>
-                                        <a aria-pressed="true" class="btn btn-secondary" href="#" id="universalviewerdirectlink"
-                                           role="button" target="_blank">JSON anzeigen</a>
+                                        <a aria-pressed="true" class="btn btn-primary" href="https://iiif.io/api/presentation/validator/service/" role="button" target="_blank">Validation Service</a>
+                                        <a aria-pressed="true" class="btn btn-secondary" href="#" id="universalviewerdirectlink" role="button" target="_blank">JSON anzeigen</a>
                                     </div>
                                 </div>
                             </div>
                             <!-- Accordion card -->
-                            <div class="card">
+                            <div
+                                class="card">
                                 <!-- Card header -->
                                 <div class="card-header" id="headingOne1" role="tab">
-                                    <a aria-controls="collapseOne1" aria-expanded="false" class="nav-link disabled"
-                                       data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1" id="manifestlink">
+                                    <a aria-controls="collapseOne1" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1" id="manifestlink">
                                         <h6 class="mb-0">Manifest</h6>
                                     </a>
                                 </div>
                                 <!-- Card body -->
-                                <div aria-labelledby="headingOne1" class="collapse" data-parent="#accordionEx" id="collapseOne1"
-                                     role="tabpanel">
+                                <div aria-labelledby="headingOne1" class="collapse" data-parent="#accordionEx" id="collapseOne1" role="tabpanel">
                                     <div class="card-body">
                                         <div class="alert alert-danger d-none" id="manifesterrors" role="alert">
                                             <h4 class="alert-heading">Fehler</h4>
                                             <hr/>
                                             <p class="mb-0" id="manifesterrorstext">Keine Fehler :-)</p>
                                         </div>
+
+                                        <form>
+                                            <div class="form-group row">
+                                                <label class="col-lg-2 col-form-label" for="apilinktocopy">IIIF manifest url:</label>
+                                                <div class="col-lg-10">
+                                                    <input class="form-control" id="apilinktocopy" onfocus="this.select();" onmouseup="return false;" readonly type="text">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <hr/>
                                         <div class="embed-responsive embed-responsive-4by3 mb-3 d-none" id="sourceframeframe">
-                                            <iframe allowfullscreen class="embed-responsive-item" id="sourceframe"
-                                                    src="#"></iframe>
+                                            <iframe allowfullscreen class="embed-responsive-item" id="sourceframe" src="#"></iframe>
                                         </div>
-                                        <a aria-pressed="true" class="btn btn-primary" href="#" id="apilink" role="button"
-                                           target="_blank">Öffnen</a>
+                                        <a aria-pressed="true" class="btn btn-primary" href="#" id="apilink" role="button" target="_blank" download="manifest.json">Speichern</a>
                                     </div>
                                 </div>
                             </div>
@@ -162,143 +156,9 @@
                 <!-- jumbotron -->
             </div>
         </div>
-        <script crossorigin="anonymous" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script>
-            // get url parameter
-            let getUrlParameter = function getUrlParameter(sParam) {
-                let sPageURL = window.location.search.substring(1),
-                        sURLVariables = sPageURL.split('&'),
-                        sParameterName,
-                        i;
-
-                for (i = 0; i < sURLVariables.length; i++) {
-                    sParameterName = sURLVariables[i].split('=');
-
-                    if (sParameterName[0] === sParam) {
-                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-                    }
-                }
-            };
-
-            $(document).ready(function () {
-
-                $("#headerurl").attr("href", Vue.prototype.$javalin.state.baseurl);
-
-                new Vue({
-                    el: "#main-vue"
-                });
-
-                if (getUrlParameter('d')) {
-                    let dir = getUrlParameter('d');
-                    if (dir.includes('/')) {
-                        dir = dir.substring(0, dir.indexOf('/'));
-                    } else if (dir.includes('\\')) {
-                        dir = dir.substring(0, dir.indexOf('\\'));
-                    } else {
-                        dir = "";
-                    }
-
-                    let newUrl = window.location.origin + window.location.pathname + "?d=" + dir;
-                    $("#directoryup")
-                            .attr("href", newUrl)
-                            .removeClass("d-none");
-                }
-
-                if (getUrlParameter('f')) {
-                    // load description
-                    const urlDesc = Vue.prototype.$javalin.state.baseurl + "/api/description?f=" + getUrlParameter('f');
-                    $("#descriptiontext").load(urlDesc + "&rand=" + Math.floor(Math.random() * 100000),
-                            function (responseText, textStatus) {
-                                if (textStatus === "success" || textStatus === "notmodified") {
-                                    $("#descriptiontext").html($.parseJSON(responseText).content);
-                                } else {
-                                    $("#descriptiontext").html("<p>Keine Beschreibung vorhanden.</p>");
-                                }
-                                $("#descriptionlink").removeClass("disabled");
-                            });
-
-                    // show JSON source code
-                    const url = Vue.prototype.$javalin.state.baseurl + "/api/file?f=" + getUrlParameter('f');
-                    $("#sourceframe").load(url + "&rand=" + Math.floor(Math.random() * 100000),
-                            function (responseText, textStatus) {
-                                if (textStatus === "success" || textStatus === "notmodified") {
-                                    $("#sourceframe").attr("src", url + "&rand=" + Math.floor(Math.random() * 100000));
-                                    $("#sourceframeframe").removeClass("d-none");
-                                } else {
-                                    $("#manifesterrorstext").html($.parseJSON(responseText)['message'].replace("/\n/g", "<br />"));
-                                    $("#manifesterrors").removeClass("d-none");
-                                }
-                                $("#apilink").attr("href", url + "&rand=" + Math.floor(Math.random() * 100000));
-                                $("#manifestlink").removeClass("disabled");
-                            });
-
-                    // validation
-                    $("#mirador2link")
-                            .attr("href", Vue.prototype.$javalin.state.baseurl + "/mirador-2.html?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
-                            .removeClass("disabled");
-                    $("#mirador3link")
-                            .attr("href", Vue.prototype.$javalin.state.baseurl + "/mirador-3.html?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
-                            .removeClass("disabled");
-                    $("#universalviewerlink")
-                            .attr("href", "https://universalviewer.io/uv.html?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
-                            .removeClass("disabled");
-                    $("#tify")
-                            .attr("href", "https://demo.tify.rocks/demo.html?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
-                            .removeClass("disabled");
-                    $("#curation")
-                            .attr("href", "http://codh.rois.ac.jp/software/iiif-curation-viewer/demo/?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
-                            .removeClass("disabled");
-                    $("#universalviewerdirectlink")
-                            .attr("href", "https://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
-                            .removeClass("disabled");
-                    $("#divajs")
-                            .attr("href", Vue.prototype.$javalin.state.baseurl + "/diva.js.html?manifest=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000))
-                            .removeClass("disabled");
-
-                    $.getJSON("https://iiif.io/api/presentation/validator/service/validate?format=json&amp;version=2.1&amp;url=" + encodeURIComponent(url) + "&rand=" + Math.floor(Math.random() * 100000), function (data) {
-                        if ($.isArray(data['error'])) {
-                            let items = [];
-                            $.each(data['error'], function (key, val) {
-                                items.push("<li id=&quot;error-item-" + key + "&quot;>" + val + "</li>");
-                            });
-                            if (items.length > 0) {
-                                $("#validation-errors").empty();
-                            }
-                            $("<ol></ol>", {
-                                "class": "validation-error-list",
-                                html: items.join("")
-                            }).appendTo("#validation-errors");
-                            $("#validatorerrors").removeClass("d-none");
-                        } else if (data['error'] && data['error'] !== "None") {
-                            $("#validation-errors").html(data['error']);
-                            $("#validatorerrors").removeClass("d-none");
-                        }
-
-                        if ($.isArray(data['warnings'])) {
-                            let items = [];
-                            $.each(data['warnings'], function (key, val) {
-                                items.push("<li id=&quot;warnings-item-" + key + "&quot;>" + val + "</li>");
-                            });
-                            if (items.length > 0) {
-                                $("#validation-warnings").empty();
-                            }
-                            $("<ol></ol>", {
-                                "class": "validation-warnings-list",
-                                html: items.join("")
-                            }).appendTo("#validation-warnings");
-                            $("#validatorwarnings").removeClass("d-none");
-                        } else if (data['warnings']) {
-                            $("#validation-warnings").html(data['warnings']);
-                            $("#validatorwarnings").removeClass("d-none");
-                        }
-                    }).done(function () {
-                        $("#validatorlink").removeClass("disabled");
-                    });
-                }
-            });
-        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="/ddblabs-iiif-presentation.min.js"></script>
     </body>
 </html>
