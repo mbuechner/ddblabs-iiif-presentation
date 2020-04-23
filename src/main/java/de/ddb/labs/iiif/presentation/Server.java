@@ -304,14 +304,14 @@ public class Server {
         /**
          * Root
          */
-        app.get("/", ctx -> {
-            ctx.redirect(Configuration.get().getValue("iiif-presentation.base-url") + "/browse");
-        });
+//        app.get("/", ctx -> {
+//            ctx.redirect(Configuration.get().getValue("iiif-presentation.base-url") + "/browse");
+//        });
         
         /**
          * Vue template
          */
-        app.get("/browse", new VueComponent("<file-overview></file-overview>"));
+        app.get("/", new VueComponent("<file-overview></file-overview>"));
         
         app.start(80);
     }
@@ -425,3 +425,4 @@ public class Server {
         }
     }
 }
+
