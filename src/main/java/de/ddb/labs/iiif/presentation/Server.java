@@ -151,7 +151,13 @@ public class Server {
         // set UTF-8 as default charset
         app.before(ctx -> {
             ctx.res.setCharacterEncoding("UTF-8");
-            ctx.res.addHeader("Access-Control-Allow-Origin", "*");
+            if (ctx.res.getHeader("Access-Control-Allow-Origin") == null || ctx.res.getHeader("Access-Control-Allow-Origin").isEmpty()) {
+                ctx.res.addHeader("Access-Control-Allow-Origin", "*");
+            }
+          
+            ctx.res.addHeader("Access-Control-Allow-Methods", "GET");
+            ctx.res.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER,Origin,X-Requested-With,Content-Type,Accept,Authorization");
+
             ctx.res.addHeader("Vary", "Accept-Encoding");
         });
 
