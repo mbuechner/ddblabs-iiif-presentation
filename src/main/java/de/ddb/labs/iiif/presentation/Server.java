@@ -58,6 +58,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.security.MessageDigest;
+import java.util.Collections;
 import org.eclipse.jgit.api.PullCommand;
 
 /**
@@ -221,14 +222,13 @@ public class Server {
             };
 
             final List<Path> filePathes = Files.list(localFolder)
-                    //.map(Path::getName)
-                    //.map(Path::toString)
                     .filter(filterGit.negate())
                     .filter(isHidden.negate())
                     .filter(endsWithJson.or(isDirectory))
-                    .sorted()
                     .collect(Collectors.toList());
 
+            Collections.sort(filePathes);
+            
             final List<IiifFile> fles = new ArrayList<>();
             for (Path filePath : filePathes) {
                 fles.add(new IiifFile(filePath));
@@ -425,4 +425,5 @@ public class Server {
         }
     }
 }
+
 
