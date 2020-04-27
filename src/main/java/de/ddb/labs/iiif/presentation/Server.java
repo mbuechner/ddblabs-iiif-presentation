@@ -60,6 +60,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.security.MessageDigest;
 import java.util.Collections;
+import java.util.Comparator;
 import org.eclipse.jgit.api.PullCommand;
 
 /**
@@ -150,6 +151,8 @@ public class Server {
         // set UTF-8 as default charset
         app.before(ctx -> {
             ctx.res.setCharacterEncoding("UTF-8");
+            ctx.res.addHeader("Access-Control-Allow-Origin", "*");
+            ctx.res.addHeader("Vary", "Accept-Encoding");
         });
 
         /**
@@ -168,9 +171,10 @@ public class Server {
                 final Path file = Path.of(folder.toString() + File.separator + f);
                 try {
                     final JsonNode rootNode = mapper.readTree(file.toFile());
-                    ((ObjectNode) rootNode).put("@id", ctx.fullUrl());
+                    ((ObjectNode) rootNode).put("@id", Configuration.get().getValue("iiif-presentation.base-url") + ctx.path() + "?" + ctx.queryString());
 
-                    changeDdbImage(rootNode);
+                    changeDdbImage(rootNode, "@id");
+                    changeDdbImage(rootNode, "logo");
 
                     final String r = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
                     ctx.status(200);
@@ -233,7 +237,12 @@ public class Server {
                     .filter(endsWithJson.or(isDirectory))
                     .collect(Collectors.toList());
 
-            Collections.sort(filePathes);
+            Collections.sort(filePathes, new Comparator<Path>() {
+                @Override
+                public int compare(Path o1, Path o2) {
+                    return o1.getFileName().toString().compareToIgnoreCase(o2.getFileName().toString());
+                }
+            });
 
             final List<IiifFile> fles = new ArrayList<>();
             for (Path filePath : filePathes) {
@@ -315,17 +324,17 @@ public class Server {
         app.start(80);
     }
 
-    public static void changeDdbImage(JsonNode parent) {
-        if (parent.has("@id")) {
-            final String idText = parent.get("@id").asText("");
+    public static void changeDdbImage(JsonNode parent, String nodeKey) {
+        if (parent.has(nodeKey)) {
+            final String idText = parent.get(nodeKey).asText("");
             if (idText.contains("{{iiif-image-url}}")) {
-                final String newUrl = idText.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", "https://labs.ddb.de/app/iiif-image/iiif/2");
-                ((ObjectNode) parent).put("@id", newUrl);
+                final String newUrl = idText.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.image-api-url"));
+                ((ObjectNode) parent).put(nodeKey, newUrl);
             }
         }
 
         for (JsonNode child : parent) {
-            changeDdbImage(child);
+            changeDdbImage(child, nodeKey);
         }
     }
 
