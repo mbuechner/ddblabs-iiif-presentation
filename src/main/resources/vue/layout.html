@@ -6,10 +6,10 @@
         <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
         <meta content="Michael Büchner" name="author"/>
         <title>IIIF Presentation API | DDBlabs</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-            <script crossorigin="anonymous" integrity="sha256-ngFW3UnAN0Tnm76mDuu7uUtYEcG3G5H1+zioJw3t+68=" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
-            <script crossorigin="anonymous" integrity="sha256-1Dr3ChysPawKq+arX2+sLoxyI/H6m4UVJWZOtvKdeQ8=" src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.1.3/vue-router.js"></script>
-            @componentRegistration
+        <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet">
+        <script crossorigin="anonymous" integrity="sha256-ngFW3UnAN0Tnm76mDuu7uUtYEcG3G5H1+zioJw3t+68=" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-1Dr3ChysPawKq+arX2+sLoxyI/H6m4UVJWZOtvKdeQ8=" src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.1.3/vue-router.js"></script>
+        @componentRegistration
     </head>
     <body>
         <br/>
@@ -24,7 +24,6 @@
                     <div class="col-md-4 order-md-2 mb-4">
                         <h4 class="d-flex justify-content-between align-items-center mb-3">
                             <span class="text-muted">IIIF Viewer testen</span>
-                            <!-- <span class="badge badge-secondary badge-pill">3</span> -->
                         </h4>
                         <div class="list-group">
                             <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="mirador2link" target="_blank">
@@ -63,40 +62,28 @@
                         <h4 class="mb-3">Dateien</h4>
                         @routeComponent
                     </div>
-                    <!-- row -->
                 </div>
                 <div class="row">
-                    <div
-                        class="col-md-12 order-md-12" id="main-code">
-                        <!--Accordion wrapper-->
-                        <div
-                            aria-multiselectable="true" class="accordion md-accordion" id="accordionEx" role="tablist">
-                            <!-- Accordion card -->
-                            <div
-                                class="card">
-                                <!-- Card header -->
+                    <div class="col-md-12 order-md-12" id="main-code">
+                        <div aria-multiselectable="true" class="accordion md-accordion" id="accordionEx" role="tablist">
+                            <div class="card">
                                 <div class="card-header" id="headingTwo3" role="tab">
                                     <a aria-controls="collapseTwo3" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo3" id="descriptionlink">
                                         <h6 class="mb-0">Beschreibung</h6>
                                     </a>
                                 </div>
-                                <!-- Card body -->
                                 <div aria-labelledby="headingTwo3" class="collapse" data-parent="#accordionEx" id="collapseTwo3" role="tabpanel">
                                     <div class="card-body">
                                         <p id="descriptiontext"></p>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Accordion card -->
-                            <div
-                                class="card">
-                                <!-- Card header -->
+                            <div class="card">
                                 <div class="card-header" id="headingTwo2" role="tab">
                                     <a aria-controls="collapseTwo2" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseTwo2" id="validatorlink">
                                         <h6 class="mb-0">Presentation API-Validator</h6>
                                     </a>
                                 </div>
-                                <!-- Card body -->
                                 <div aria-labelledby="headingTwo2" class="collapse" data-parent="#accordionEx" id="collapseTwo2" role="tabpanel">
                                     <div class="card-body">
                                         <div class="alert alert-danger d-none" id="validatorerrors" role="alert">
@@ -114,16 +101,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Accordion card -->
-                            <div
-                                class="card">
-                                <!-- Card header -->
+                            <div class="card">
                                 <div class="card-header" id="headingOne1" role="tab">
                                     <a aria-controls="collapseOne1" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1" id="manifestlink">
                                         <h6 class="mb-0">Manifest</h6>
                                     </a>
                                 </div>
-                                <!-- Card body -->
                                 <div aria-labelledby="headingOne1" class="collapse" data-parent="#accordionEx" id="collapseOne1" role="tabpanel">
                                     <div class="card-body">
                                         <div class="alert alert-danger d-none" id="manifesterrors" role="alert">
@@ -131,34 +114,30 @@
                                             <hr/>
                                             <p class="mb-0" id="manifesterrorstext">Keine Fehler :-)</p>
                                         </div>
-
                                         <form>
                                             <div class="form-group row">
                                                 <label class="col-lg-2 col-form-label" for="apilinktocopy">IIIF manifest url:</label>
                                                 <div class="col-lg-10">
-                                                    <input class="form-control" id="apilinktocopy" onfocus="this.select();" onmouseup="return false;" readonly type="text">
+                                                    <input class="form-control" id="apilinktocopy" onfocus="this.select();" onmouseup="return false;" readonly type="text"/>
                                                 </div>
                                             </div>
-                                        </form>
-                                        <hr/>
-                                        <div class="embed-responsive embed-responsive-4by3 mb-3 d-none" id="sourceframeframe">
+                                        </form><hr/><div class="embed-responsive embed-responsive-4by3 mb-3 d-none" id="sourceframeframe">
                                             <iframe allowfullscreen class="embed-responsive-item" id="sourceframe" src="#"></iframe>
                                         </div>
-                                        <a aria-pressed="true" class="btn btn-primary" href="#" id="apilink" role="button" target="_blank" download="manifest.json">Speichern</a>
+                                        <a aria-pressed="true" class="btn btn-primary" download="manifest.json" href="#" id="apilink" role="button" target="_blank">Speichern</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- main -->
                     </div>
-                    <!-- row -->
                 </div>
-                <!-- jumbotron -->
             </div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <script src="./ddblabs-iiif-presentation.min.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script crossorigin="anonymous" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script>
+            new Vue({el: "#main-vue"});
+        </script>
     </body>
 </html>
