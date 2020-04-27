@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.rjeschke.txtmark.Processor;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.vue.VueComponent;
@@ -110,6 +111,7 @@ public class Server {
 
     /**
      * Start the server... :-)
+     *
      * @throws Exception
      */
     public void start() throws Exception {
@@ -166,6 +168,10 @@ public class Server {
                 final Path file = Path.of(folder.toString() + File.separator + f);
                 try {
                     final JsonNode rootNode = mapper.readTree(file.toFile());
+                    ((ObjectNode) rootNode).put("@id", ctx.fullUrl());
+
+                    changeDdbImage(rootNode);
+
                     final String r = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
                     ctx.status(200);
                     return r;
@@ -228,7 +234,7 @@ public class Server {
                     .collect(Collectors.toList());
 
             Collections.sort(filePathes);
-            
+
             final List<IiifFile> fles = new ArrayList<>();
             for (Path filePath : filePathes) {
                 fles.add(new IiifFile(filePath));
@@ -302,18 +308,25 @@ public class Server {
         });
 
         /**
-         * Root
-         */
-//        app.get("/", ctx -> {
-//            ctx.redirect(Configuration.get().getValue("iiif-presentation.base-url") + "/browse");
-//        });
-        
-        /**
          * Vue template
          */
         app.get("/", new VueComponent("<file-overview></file-overview>"));
-        
+
         app.start(80);
+    }
+
+    public static void changeDdbImage(JsonNode parent) {
+        if (parent.has("@id")) {
+            final String idText = parent.get("@id").asText("");
+            if (idText.contains("{{iiif-image-url}}")) {
+                final String newUrl = idText.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", "https://labs.ddb.de/app/iiif-image/iiif/2");
+                ((ObjectNode) parent).put("@id", newUrl);
+            }
+        }
+
+        for (JsonNode child : parent) {
+            changeDdbImage(child);
+        }
     }
 
     /**
@@ -332,10 +345,12 @@ public class Server {
     }
 
     /**
-     * Clone Repository configured in iiif-presentation.cfg or set over environment variables.
+     * Clone Repository configured in iiif-presentation.cfg or set over
+     * environment variables.
+     *
      * @param folder
      * @throws IOException
-     * @throws GitAPIException 
+     * @throws GitAPIException
      */
     private void cloneRepository(Path folder) throws IOException, GitAPIException {
 
@@ -425,5 +440,4 @@ public class Server {
         }
     }
 }
-
 
