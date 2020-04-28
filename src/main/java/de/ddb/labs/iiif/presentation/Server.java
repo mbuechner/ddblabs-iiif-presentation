@@ -15,6 +15,8 @@
  */
 package de.ddb.labs.iiif.presentation;
 
+import de.ddb.labs.iiif.presentation.helper.Configuration;
+import de.ddb.labs.iiif.presentation.helper.NaturalOrderComparator;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -60,7 +62,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.security.MessageDigest;
 import java.util.Collections;
-import java.util.Comparator;
 import org.eclipse.jgit.api.PullCommand;
 
 /**
@@ -154,7 +155,7 @@ public class Server {
             if (ctx.res.getHeader("Access-Control-Allow-Origin") == null || ctx.res.getHeader("Access-Control-Allow-Origin").isEmpty()) {
                 ctx.res.addHeader("Access-Control-Allow-Origin", "*");
             }
-          
+
             ctx.res.addHeader("Access-Control-Allow-Methods", "GET");
             ctx.res.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER,Origin,X-Requested-With,Content-Type,Accept,Authorization");
 
@@ -243,12 +244,7 @@ public class Server {
                     .filter(endsWithJson.or(isDirectory))
                     .collect(Collectors.toList());
 
-            Collections.sort(filePathes, new Comparator<Path>() {
-                @Override
-                public int compare(Path o1, Path o2) {
-                    return o1.getFileName().toString().compareToIgnoreCase(o2.getFileName().toString());
-                }
-            });
+            Collections.sort(filePathes, new NaturalOrderComparator());
 
             final List<IiifFile> fles = new ArrayList<>();
             for (Path filePath : filePathes) {
