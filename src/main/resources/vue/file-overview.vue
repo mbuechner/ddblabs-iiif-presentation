@@ -26,7 +26,10 @@
             fetch(Vue.prototype.$javalin.state.baseurl + "/api/browse?d=" + (this.$route.query.d ? encodeURIComponent(this.$route.query.d) : ""))
                 .then(res => res.json())
                 .then(res => this.data = res)
-                .catch(() => alert("Error while fetching files"));
+                .catch(error => {
+                    this.errorMsg = 'Error while fetching files'
+                    console.log(error)
+                });
             this.f = encodeURIComponent(this.$route.query.f);
         },
     });
