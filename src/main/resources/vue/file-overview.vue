@@ -27,8 +27,7 @@
                 .then(res => res.json())
                 .then(res => this.data = res)
                 .catch(error => {
-                    this.errorMsg = 'Error while fetching files'
-                    console.log(error)
+                    console.log(error);
                 });
             this.f = encodeURIComponent(this.$route.query.f);
         },
