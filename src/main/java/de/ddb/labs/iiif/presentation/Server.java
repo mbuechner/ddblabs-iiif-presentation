@@ -178,10 +178,17 @@ public class Server {
                 final Path file = Path.of(folder.toString() + File.separator + f);
                 try {
                     final JsonNode rootNode = mapper.readTree(file.toFile());
-                    ((ObjectNode) rootNode).put("@id", Configuration.get().getValue("iiif-presentation.base-url") + ctx.path() + "?" + ctx.queryString());
+                    if (rootNode.get("@context") != null && rootNode.get("@context").asText().equals("http://iiif.io/api/presentation/2/context.json")) {
+                        // IIIF v2
+                        ((ObjectNode) rootNode).put("@id", Configuration.get().getValue("iiif-presentation.base-url") + ctx.path() + "?" + ctx.queryString());
+                        changeDdbImage(rootNode, "@id");
+                        changeDdbImage(rootNode, "logo");
 
-                    changeDdbImage(rootNode, "@id");
-                    changeDdbImage(rootNode, "logo");
+                    } else if (rootNode.get("@context") != null && rootNode.get("@context").asText().equals("http://iiif.io/api/presentation/3/context.json")) {
+                        // IIIF v3
+                        ((ObjectNode) rootNode).put("id", Configuration.get().getValue("iiif-presentation.base-url") + ctx.path() + "?" + ctx.queryString());
+                        changeDdbImage(rootNode, "id");
+                    }
 
                     final String r = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
                     ctx.status(200);
@@ -238,19 +245,31 @@ public class Server {
                 return e.getFileName().toString().equals(".git");
             };
 
+            final List<Path> folderPathes = Files.list(localFolder)
+                    .filter(filterGit.negate())
+                    .filter(isHidden.negate())
+                    .filter(isDirectory)
+                    .collect(Collectors.toList());
+            Collections.sort(folderPathes, new NaturalOrderComparator());
+
             final List<Path> filePathes = Files.list(localFolder)
                     .filter(filterGit.negate())
                     .filter(isHidden.negate())
-                    .filter(endsWithJson.or(isDirectory))
+                    .filter(endsWithJson)
                     .collect(Collectors.toList());
 
             Collections.sort(filePathes, new NaturalOrderComparator());
 
             final List<IiifFile> fles = new ArrayList<>();
+            for (Path filePath : folderPathes) {
+                fles.add(new IiifFile(filePath));
+            }
             for (Path filePath : filePathes) {
                 fles.add(new IiifFile(filePath));
             }
+
             ctx.json(fles);
+
         });
 
         /**
