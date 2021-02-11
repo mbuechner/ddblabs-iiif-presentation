@@ -15,22 +15,22 @@
  */
 package de.ddb.labs.iiif.presentation;
 
-import de.ddb.labs.iiif.presentation.helper.Configuration;
-import de.ddb.labs.iiif.presentation.helper.NaturalOrderComparator;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.rjeschke.txtmark.Processor;
+import de.ddb.labs.iiif.presentation.helper.Configuration;
+import de.ddb.labs.iiif.presentation.helper.NaturalOrderComparator;
 import io.javalin.Javalin;
-import io.javalin.plugin.rendering.vue.VueComponent;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.json.JavalinJackson;
 import io.javalin.plugin.openapi.annotations.ContentType;
 import io.javalin.plugin.rendering.vue.JavalinVue;
+import io.javalin.plugin.rendering.vue.VueComponent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -40,7 +40,9 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Collections;
 import static java.util.Collections.singleton;
 import java.util.List;
 import java.util.Map;
@@ -54,15 +56,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.security.MessageDigest;
-import java.util.Collections;
-import org.eclipse.jgit.api.PullCommand;
 
 /**
  *
@@ -71,10 +71,6 @@ import org.eclipse.jgit.api.PullCommand;
 public class Server {
 
     private static final Logger LOG = LoggerFactory.getLogger(Server.class);
-    private Path folder;
-    private Git git;
-    private ObjectId oIdOfLastCommit;
-    private ObjectMapper mapper = new ObjectMapper();
     private final static List<String> ENV = new ArrayList<>() {
         {
             add("iiif-presentation.base-url");
@@ -84,6 +80,10 @@ public class Server {
             add("iiif-presentation.webhook-secret");
         }
     };
+    private Path folder;
+    private Git git;
+    private ObjectId oIdOfLastCommit;
+    private ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Constructor
@@ -177,23 +177,12 @@ public class Server {
 
                 final Path file = Path.of(folder.toString() + File.separator + f);
                 try {
-                    final JsonNode rootNode = mapper.readTree(file.toFile());
-                    if (rootNode.get("@context") != null && rootNode.get("@context").asText().equals("http://iiif.io/api/presentation/2/context.json")) {
-                        // IIIF v2
-                        ((ObjectNode) rootNode).put("@id", Configuration.get().getValue("iiif-presentation.base-url") + ctx.path() + "?" + ctx.queryString());
-                        changeDdbImage(rootNode, "@id");
-                        changeDdbImage(rootNode, "logo");
-
-                    } else if (rootNode.get("@context") != null && rootNode.get("@context").asText().equals("http://iiif.io/api/presentation/3/context.json")) {
-                        // IIIF v3
-                        ((ObjectNode) rootNode).put("id", Configuration.get().getValue("iiif-presentation.base-url") + ctx.path() + "?" + ctx.queryString());
-                        changeDdbImage(rootNode, "id");
-                    }
-
+                    JsonNode rootNode = mapper.readTree(file.toFile());
+                    rootNode = changeDdbImage(rootNode, ctx.path() + "?" + ctx.queryString());
                     final String r = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
                     ctx.status(200);
                     return r;
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     ctx.status(404);
                     return String.format("{\"error\":\"404\",\"message\": \"%s\"}", StringEscapeUtils.escapeJson(ex.getMessage()));
                 }
@@ -345,18 +334,11 @@ public class Server {
         app.start(80);
     }
 
-    public static void changeDdbImage(JsonNode parent, String nodeKey) {
-        if (parent.has(nodeKey)) {
-            final String idText = parent.get(nodeKey).asText("");
-            if (idText.contains("{{iiif-image-url}}")) {
-                final String newUrl = idText.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.image-api-url"));
-                ((ObjectNode) parent).put(nodeKey, newUrl);
-            }
-        }
-
-        for (JsonNode child : parent) {
-            changeDdbImage(child, nodeKey);
-        }
+    public JsonNode changeDdbImage(JsonNode parent, String path) throws JsonProcessingException {
+        String jsonString = mapper.writeValueAsString(parent);
+        jsonString = jsonString.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.image-api-url"));
+        jsonString = jsonString.replaceAll("\\{\\{self\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.base-url") + path);
+        return mapper.readTree(jsonString);
     }
 
     /**
@@ -470,4 +452,3 @@ public class Server {
         }
     }
 }
-
