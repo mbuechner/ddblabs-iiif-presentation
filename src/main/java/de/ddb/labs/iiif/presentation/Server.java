@@ -79,6 +79,7 @@ public class Server {
             add("iiif-presentation.folder");
             add("iiif-presentation.webhook-secret");
             add("iiif-presentation.port");
+            add("iiif-presentation.pathprefix");
         }
     };
     private Path folder;
@@ -166,7 +167,7 @@ public class Server {
         /**
          * Get JSON file API entry point
          */
-        app.get("/api/file", ctx -> {
+        app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/file", ctx -> {
 
             final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
                 String f = ctx.queryParam("f", "");
@@ -191,14 +192,14 @@ public class Server {
             ctx.contentType(ContentType.JSON).result(future);
         });
 
-        app.get("/api/configuration", ctx -> {
+        app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/configuration", ctx -> {
             ctx.json(Configuration.get().getAllConfiguration());
         });
 
         /**
          * List JSON files API entry point
          */
-        app.get("/api/browse", ctx -> {
+        app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/browse", ctx -> {
 
             String d = ctx.queryParam("d", "");
             if (d != null && !d.isEmpty()) {
@@ -265,7 +266,7 @@ public class Server {
         /**
          * Get description, stored in [filename].md, of a JSON file.
          */
-        app.get("/api/description", ctx -> {
+        app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/description", ctx -> {
 
             final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
                 String f = ctx.queryParam("f", "");
@@ -296,7 +297,7 @@ public class Server {
         /**
          * Webhook API entry point
          */
-        app.post("/api/update", ctx -> {
+        app.post(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/update", ctx -> {
             final String payload = ctx.body();
             LOG.info("Payload received: {}", payload);
 
@@ -330,7 +331,7 @@ public class Server {
         /**
          * Vue template
          */
-        app.get("/", new VueComponent("<file-overview></file-overview>"));
+        app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/", new VueComponent("<file-overview></file-overview>"));
 
         app.start(Integer.parseInt(Configuration.get().getValue("iiif-presentation.port")));
     }
