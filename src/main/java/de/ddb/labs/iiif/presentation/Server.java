@@ -132,6 +132,11 @@ public class Server {
             config.showJavalinBanner = false;
             config.addStaticFiles(files, Location.EXTERNAL);
             config.addStaticFiles("/viewer");
+
+            config.requestLogger((ctx, timeMs) -> {
+                LOG.info("{} {} took {}", ctx.method(), ctx.path(), timeMs);
+            });
+
             JavalinVue.stateFunction = (ctx -> {
                 return Map.of("baseurl", Configuration.get().getValue("iiif-presentation.base-url"));
             });
