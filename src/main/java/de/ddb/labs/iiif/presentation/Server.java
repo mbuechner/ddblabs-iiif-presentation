@@ -78,6 +78,7 @@ public class Server {
             add("iiif-presentation.git-branch");
             add("iiif-presentation.folder");
             add("iiif-presentation.webhook-secret");
+            add("iiif-presentation.port");
         }
     };
     private Path folder;
@@ -331,7 +332,7 @@ public class Server {
          */
         app.get("/", new VueComponent("<file-overview></file-overview>"));
 
-        app.start(80);
+        app.start(Integer.parseInt(Configuration.get().getValue("iiif-presentation.port")));
     }
 
     public JsonNode changeDdbImage(JsonNode parent, String path) throws JsonProcessingException {
