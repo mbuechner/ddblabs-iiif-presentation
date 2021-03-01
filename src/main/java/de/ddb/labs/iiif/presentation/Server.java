@@ -117,7 +117,9 @@ public class Server {
         }
 
         try {
-            for (String f : getResourceFiles("/viewer")) {
+            final List<String> list = getResourceFiles("/viewer");
+            LOG.info("No. of resources: {}", list.size());
+            for (String f : list) {
                 LOG.info("/viewer/{} found.", f);
             }
         } catch (IOException ex) {
