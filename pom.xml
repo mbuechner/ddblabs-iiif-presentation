@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.ddb.labs</groupId>
     <artifactId>iiif-presentation</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>IIIF Presentation for DDB</name>
     <description>Eine Test- und Entwicklungsumgebung für IIIF Presenatation API in der Deutsche Digitalen Bibliothek</description>

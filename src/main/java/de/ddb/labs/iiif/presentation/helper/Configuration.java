@@ -1,5 +1,5 @@
 /* 
- * Copyright 2019 Michael Büchner, Deutsche Digitale Bibliothek
+ * Copyright 2019-2021 Michael Büchner, Deutsche Digitale Bibliothek
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,12 @@ import org.slf4j.LoggerFactory;
  */
 public class Configuration {
 
-    private final static String PROPERTY_FILE = "/iiif-presentation.cfg";
-    private final static String PROPERTY_FILE_DEV = "/iiif-presentation.dev.cfg";
     private final static Configuration INSTANCE = new Configuration();
-    private final static Properties PROPERTIES = new Properties();
     private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
+    private final static Properties PROPERTIES = new Properties();
+    private final static String PROPERTY_FILE = "/iiif-presentation.cfg";
 
-    private Configuration() {
-    }
+    private final static String PROPERTY_FILE_DEV = "/iiif-presentation.dev.cfg";
 
     /**
      * Get configuration instance
@@ -64,10 +62,7 @@ public class Configuration {
 
         return Configuration.INSTANCE;
     }
-
-    public String[] getValueAsArray(String key, String split) {
-        final String[] r = PROPERTIES.getProperty(key).split(split);
-        return r == null ? new String[0] : r;
+    private Configuration() {
     }
 
     public Map<String, String> getAllConfiguration() {
@@ -81,6 +76,10 @@ public class Configuration {
 
     public String getValue(String key) {
         return PROPERTIES.getProperty(key);
+    }
+    public String[] getValueAsArray(String key, String split) {
+        final String[] r = PROPERTIES.getProperty(key).split(split);
+        return r == null ? new String[0] : r;
     }
 
     public void setValue(String key, String value) {

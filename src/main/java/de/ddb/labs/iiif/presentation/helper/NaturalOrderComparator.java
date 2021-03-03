@@ -4,6 +4,12 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 public class NaturalOrderComparator implements Comparator {
+    private static char charAt(String s, int i) {
+        if (i >= s.length()) {
+            return 0;
+        }
+        return s.charAt(i);
+    }
 
     @Override
     public int compare(Object o1, Object o2) {
@@ -104,11 +110,5 @@ public class NaturalOrderComparator implements Comparator {
         }
     }
 
-    private static char charAt(String s, int i) {
-        if (i >= s.length()) {
-            return 0;
-        }
-        return s.charAt(i);
-    }
 }
 

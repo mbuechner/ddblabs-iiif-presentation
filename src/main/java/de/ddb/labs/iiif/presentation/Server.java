@@ -1,5 +1,5 @@
 /* 
- * Copyright 2019 Michael Büchner, Deutsche Digitale Bibliothek
+ * Copyright 2019-2021 Michael Büchner, Deutsche Digitale Bibliothek
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,8 @@ import io.javalin.plugin.json.JavalinJackson;
 import io.javalin.plugin.openapi.annotations.ContentType;
 import io.javalin.plugin.rendering.vue.JavalinVue;
 import io.javalin.plugin.rendering.vue.VueComponent;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -73,7 +70,6 @@ import org.slf4j.LoggerFactory;
  */
 public class Server {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Server.class);
     private final static List<String> ENV = new ArrayList<>() {
         {
             add("iiif-presentation.base-url");
@@ -84,10 +80,11 @@ public class Server {
             add("iiif-presentation.pathprefix");
         }
     };
+    private static final Logger LOG = LoggerFactory.getLogger(Server.class);
     private Path folder;
     private Git git;
-    private ObjectId oIdOfLastCommit;
     private ObjectMapper mapper = new ObjectMapper();
+    private ObjectId oIdOfLastCommit;
 
     /**
      * Constructor
@@ -113,45 +110,80 @@ public class Server {
         } catch (IOException | GitAPIException ex) {
             LOG.error(ex.getMessage(), ex);
         }
+    }
 
+
+    public JsonNode changeDdbImage(JsonNode parent, String path) throws JsonProcessingException {
+        String jsonString = mapper.writeValueAsString(parent);
+        jsonString = jsonString.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.image-api-url"));
+        jsonString = jsonString.replaceAll("\\{\\{self\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.base-url") + path);
+        return mapper.readTree(jsonString);
+    }
+
+
+    /**
+     * Clone Repository configured in iiif-presentation.cfg or set over
+     * environment variables.
+     *
+     * @param folder
+     * @throws IOException
+     * @throws GitAPIException
+     */
+    private void cloneRepository(Path folder) throws IOException, GitAPIException {
+
+        LOG.info("Clone Branch " + Configuration.get().getValue("iiif-presentation.git-branch") + " von " + Configuration.get().getValue("iiif-presentation.git-url") + "...");
         try {
-            final List<String> list = getResourceFiles("/viewer");
-            LOG.info("No. of resources: {}", list.size());
-            for (String f : list) {
-                LOG.info("/viewer/{} found.", f);
-            }
-        } catch (IOException ex) {
-            LOG.warn("{}", ex.getMessage());
+            git = Git.cloneRepository()
+                    .setURI(Configuration.get().getValue("iiif-presentation.git-url"))
+                    .setDirectory(folder.toFile())
+                    .setBranchesToClone(singleton(Configuration.get().getValue("iiif-presentation.git-branch")))
+                    .setBranch(Configuration.get().getValue("iiif-presentation.git-branch"))
+                    .call();
+            pullRepository();
+        } catch (IOException | GitAPIException e) {
+            LOG.error(e.getMessage());
+        }
+    }
+    /**
+     * Sets environment variables if there any, otherwise it'll use the values
+     * from iiif-presentation.cfg
+     *
+     * @param varName
+     */
+    private void setEnvironmentVariable(String varName) {
+        if (System.getenv(varName) != null) {
+            System.setProperty(varName, System.getenv(varName));
+            Configuration.get().setValue(varName, System.getenv(varName));
+        } else {
+            System.setProperty(varName, Configuration.get().getValue(varName));
         }
     }
 
-    private List<String> getResourceFiles(String path) throws IOException {
-        List<String> filenames = new ArrayList<>();
+    /**
+     * Pulls the Git repositiory if there's a new commit.
+     *
+     * @throws IncorrectObjectTypeException
+     * @throws GitAPIException
+     * @throws IOException
+     */
+    private void pullRepository() throws IncorrectObjectTypeException, GitAPIException, IOException {
 
-        try (
-                InputStream in = getResourceAsStream(path);
-                BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            String resource;
+        final Map<String, Ref> map = Git.lsRemoteRepository()
+                .setHeads(true)
+                .setTags(true)
+                .setRemote(Configuration.get().getValue("iiif-presentation.git-url"))
+                .callAsMap();
 
-            while ((resource = br.readLine()) != null) {
-                filenames.add(resource);
-            }
+        final Ref commit = map.get(Configuration.get().getValue("iiif-presentation.git-branch"));
+        final ObjectId oId = commit.getObjectId();
+
+        if (oId != null && !oId.equals(oIdOfLastCommit) && git != null) {
+            final PullCommand pull = git.pull();
+            pull.call();
+            oIdOfLastCommit = oId;
+            LOG.info("ObjectId of last commit is now: {}", oIdOfLastCommit);
         }
-
-        return filenames;
     }
-
-    private InputStream getResourceAsStream(String resource) {
-        final InputStream in
-                = getContextClassLoader().getResourceAsStream(resource);
-
-        return in == null ? getClass().getResourceAsStream(resource) : in;
-    }
-
-    private ClassLoader getContextClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
-    }
-
     /**
      * Start the server... :-)
      *
@@ -176,7 +208,7 @@ public class Server {
             }
 
             config.requestLogger((ctx, timeMs) -> {
-                LOG.info("{} {} took {}", ctx.method(), ctx.path(), timeMs);
+                LOG.debug("{} {} took {}", ctx.method(), ctx.path(), timeMs);
             });
 
             JavalinVue.stateFunction = (ctx -> {
@@ -381,78 +413,6 @@ public class Server {
         app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/", new VueComponent("<file-overview></file-overview>"));
 
         app.start(Integer.parseInt(Configuration.get().getValue("iiif-presentation.port")));
-    }
-
-    public JsonNode changeDdbImage(JsonNode parent, String path) throws JsonProcessingException {
-        String jsonString = mapper.writeValueAsString(parent);
-        jsonString = jsonString.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.image-api-url"));
-        jsonString = jsonString.replaceAll("\\{\\{self\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.base-url") + path);
-        return mapper.readTree(jsonString);
-    }
-
-    /**
-     * Sets environment variables if there any, otherwise it'll use the values
-     * from iiif-presentation.cfg
-     *
-     * @param varName
-     */
-    private void setEnvironmentVariable(String varName) {
-        if (System.getenv(varName) != null) {
-            System.setProperty(varName, System.getenv(varName));
-            Configuration.get().setValue(varName, System.getenv(varName));
-        } else {
-            System.setProperty(varName, Configuration.get().getValue(varName));
-        }
-    }
-
-    /**
-     * Clone Repository configured in iiif-presentation.cfg or set over
-     * environment variables.
-     *
-     * @param folder
-     * @throws IOException
-     * @throws GitAPIException
-     */
-    private void cloneRepository(Path folder) throws IOException, GitAPIException {
-
-        LOG.info("Clone Branch " + Configuration.get().getValue("iiif-presentation.git-branch") + " von " + Configuration.get().getValue("iiif-presentation.git-url") + "...");
-        try {
-            git = Git.cloneRepository()
-                    .setURI(Configuration.get().getValue("iiif-presentation.git-url"))
-                    .setDirectory(folder.toFile())
-                    .setBranchesToClone(singleton(Configuration.get().getValue("iiif-presentation.git-branch")))
-                    .setBranch(Configuration.get().getValue("iiif-presentation.git-branch"))
-                    .call();
-            pullRepository();
-        } catch (IOException | GitAPIException e) {
-            LOG.error(e.getMessage());
-        }
-    }
-
-    /**
-     * Pulls the Git repositiory if there's a new commit.
-     *
-     * @throws IncorrectObjectTypeException
-     * @throws GitAPIException
-     * @throws IOException
-     */
-    private void pullRepository() throws IncorrectObjectTypeException, GitAPIException, IOException {
-
-        final Map<String, Ref> map = Git.lsRemoteRepository()
-                .setHeads(true)
-                .setTags(true)
-                .setRemote(Configuration.get().getValue("iiif-presentation.git-url"))
-                .callAsMap();
-
-        final Ref commit = map.get(Configuration.get().getValue("iiif-presentation.git-branch"));
-        final ObjectId oId = commit.getObjectId();
-
-        if (oId != null && !oId.equals(oIdOfLastCommit) && git != null) {
-            final PullCommand pull = git.pull();
-            pull.call();
-            oIdOfLastCommit = oId;
-            LOG.info("ObjectId of last commit is now: {}", oIdOfLastCommit);
-        }
     }
 
     /**
