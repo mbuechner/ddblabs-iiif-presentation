@@ -51,7 +51,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
@@ -80,7 +79,6 @@ public class Server {
             add("iiif-presentation.base-url");
             add("iiif-presentation.git-url");
             add("iiif-presentation.git-branch");
-            add("iiif-presentation.folder");
             add("iiif-presentation.webhook-secret");
             add("iiif-presentation.port");
             add("iiif-presentation.pathprefix");
@@ -123,7 +121,7 @@ public class Server {
                 LOG.info("/viewer/{} found.", f);
             }
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.warn("{}", ex.getMessage());
         }
     }
 
@@ -161,8 +159,7 @@ public class Server {
      */
     public void start() throws Exception {
 
-        final String files = folder.toString() + File.separator + Configuration.get().getValue("iiif-presentation.folder");
-
+        // final String files = folder.toString() + File.separator + Configuration.get().getValue("iiif-presentation.folder");
         JavalinJackson.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         JavalinJackson.getObjectMapper().enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
         JavalinJackson.getObjectMapper().setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
@@ -171,8 +168,12 @@ public class Server {
             config.enableCorsForAllOrigins();
             config.autogenerateEtags = true;
             config.showJavalinBanner = false;
-            config.addStaticFiles(files, Location.EXTERNAL);
-            config.addStaticFiles("/viewer");
+            // config.addStaticFiles(files, Location.EXTERNAL);
+            if (Configuration.get().getValue("iiif-presentation.pathprefix").isBlank()) {
+                config.addStaticFiles("viewer/", Location.CLASSPATH);
+            } else {
+                config.addStaticFiles(Configuration.get().getValue("iiif-presentation.pathprefix"), "viewer/", Location.CLASSPATH);
+            }
 
             config.requestLogger((ctx, timeMs) -> {
                 LOG.info("{} {} took {}", ctx.method(), ctx.path(), timeMs);
