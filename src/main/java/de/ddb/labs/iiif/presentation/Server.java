@@ -259,7 +259,7 @@ public class Server {
                 final Path file = Path.of(folder.toString() + File.separator + f);
                 try {
                     JsonNode rootNode = mapper.readTree(file.toFile());
-                    rootNode = changeDdbImage(rootNode, ctx.path() + "?" + ctx.queryString());
+                    rootNode = changeDdbImage(rootNode, "/api/file?" + ctx.queryString());
                     final String r = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
                     ctx.status(200);
                     return r;
