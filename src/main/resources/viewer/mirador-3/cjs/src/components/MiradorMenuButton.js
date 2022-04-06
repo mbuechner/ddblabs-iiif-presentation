@@ -15,6 +15,8 @@ var _Tooltip = _interopRequireDefault(require("@material-ui/core/Tooltip"));
 
 var _cssNs = _interopRequireDefault(require("../config/css-ns"));
 
+var _excluded = ["badge", "children", "containerId", "dispatch", "BadgeProps", "TooltipProps"];
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -35,7 +37,7 @@ function MiradorMenuButton(props) {
       dispatch = props.dispatch,
       BadgeProps = props.BadgeProps,
       TooltipProps = props.TooltipProps,
-      iconButtonProps = _objectWithoutProperties(props, ["badge", "children", "containerId", "dispatch", "BadgeProps", "TooltipProps"]);
+      iconButtonProps = _objectWithoutProperties(props, _excluded);
 
   var button = /*#__PURE__*/_react["default"].createElement(_IconButton["default"], iconButtonProps, badge ? /*#__PURE__*/_react["default"].createElement(_Badge["default"], BadgeProps, children) : children);
 

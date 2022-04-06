@@ -3,10 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getManuallyExpandedNodeIds = getManuallyExpandedNodeIds;
+exports.getDefaultSidebarVariant = void 0;
 exports.getExpandedNodeIds = getExpandedNodeIds;
+exports.getManuallyExpandedNodeIds = getManuallyExpandedNodeIds;
 exports.getNodeIdToScrollTo = getNodeIdToScrollTo;
-exports.getDefaultSidebarVariant = exports.getVisibleNodeIds = void 0;
+exports.getVisibleNodeIds = void 0;
 
 var _reselect = require("reselect");
 
@@ -14,7 +15,7 @@ var _union = _interopRequireDefault(require("lodash/union"));
 
 var _without = _interopRequireDefault(require("lodash/without"));
 
-var _Utils = require("manifesto.js/dist-esmodule/Utils");
+var _manifesto = require("manifesto.js");
 
 var _canvases = require("./canvases");
 
@@ -24,7 +25,7 @@ var _sequences = require("./sequences");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -38,7 +39,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -49,7 +50,7 @@ function rangeContainsCanvasId(range, canvasId) {
   var canvasIds = range.getCanvasIds();
 
   for (var i = 0; i < canvasIds.length; i += 1) {
-    if (_Utils.Utils.normalisedUrlsMatch(canvasIds[i], canvasId)) {
+    if (_manifesto.Utils.normalisedUrlsMatch(canvasIds[i], canvasId)) {
       return true;
     }
   }

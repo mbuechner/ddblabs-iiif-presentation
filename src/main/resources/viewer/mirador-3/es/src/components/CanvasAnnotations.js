@@ -12,7 +12,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -28,6 +28,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import SanitizedHtml from '../containers/SanitizedHtml';
+import { ScrollTo } from './ScrollTo';
 /**
  * CanvasAnnotations ~
 */
@@ -110,7 +111,8 @@ export var CanvasAnnotations = /*#__PURE__*/function (_Component) {
           totalSize = _this$props4.totalSize,
           listContainerComponent = _this$props4.listContainerComponent,
           htmlSanitizationRuleSet = _this$props4.htmlSanitizationRuleSet,
-          hoveredAnnotationIds = _this$props4.hoveredAnnotationIds;
+          hoveredAnnotationIds = _this$props4.hoveredAnnotationIds,
+          containerRef = _this$props4.containerRef;
       if (annotations.length === 0) return /*#__PURE__*/React.createElement(React.Fragment, null);
       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Typography, {
         className: classes.sectionHeading,
@@ -122,7 +124,13 @@ export var CanvasAnnotations = /*#__PURE__*/function (_Component) {
         autoFocusItem: true,
         variant: "selectedMenu"
       }, annotations.map(function (annotation) {
-        return /*#__PURE__*/React.createElement(MenuItem, {
+        return /*#__PURE__*/React.createElement(ScrollTo, {
+          containerRef: containerRef,
+          key: "".concat(annotation.id, "-scroll"),
+          offsetTop: 96 // offset for the height of the form above
+          ,
+          scrollTo: selectedAnnotationId === annotation.id
+        }, /*#__PURE__*/React.createElement(MenuItem, {
           button: true,
           component: listContainerComponent,
           className: clsx(classes.annotationListItem, _defineProperty({}, classes.hovered, hoveredAnnotationIds.includes(annotation.id))),
@@ -156,7 +164,7 @@ export var CanvasAnnotations = /*#__PURE__*/function (_Component) {
             className: classes.chip,
             key: tag.toString()
           });
-        }))));
+        })))));
       })));
     }
   }]);
@@ -166,6 +174,7 @@ export var CanvasAnnotations = /*#__PURE__*/function (_Component) {
 CanvasAnnotations.defaultProps = {
   annotations: [],
   classes: {},
+  containerRef: undefined,
   hoveredAnnotationIds: [],
   htmlSanitizationRuleSet: 'iiif',
   listContainerComponent: 'li',

@@ -10,7 +10,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -23,12 +23,16 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CloseIcon from '@material-ui/icons/Close';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import ScrollIndicatedDialogContent from '../containers/ScrollIndicatedDialogContent';
 /**
  */
 
@@ -89,6 +93,7 @@ export var WorkspaceExport = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this$props = this.props,
           children = _this$props.children,
+          classes = _this$props.classes,
           container = _this$props.container,
           open = _this$props.open,
           t = _this$props.t;
@@ -128,7 +133,16 @@ export var WorkspaceExport = /*#__PURE__*/function (_Component) {
         disableTypography: true
       }, /*#__PURE__*/React.createElement(Typography, {
         variant: "h2"
-      }, t('downloadExport'))), /*#__PURE__*/React.createElement(ScrollIndicatedDialogContent, null, children, /*#__PURE__*/React.createElement("pre", null, this.exportedState())), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
+      }, t('downloadExport'))), /*#__PURE__*/React.createElement(DialogContent, null, /*#__PURE__*/React.createElement(Accordion, {
+        elevation: 0
+      }, /*#__PURE__*/React.createElement(AccordionSummary, {
+        classes: {
+          root: classes.accordionTitle
+        },
+        expandIcon: /*#__PURE__*/React.createElement(ExpandMoreIcon, null)
+      }, /*#__PURE__*/React.createElement(Typography, {
+        variant: "h4"
+      }, t('viewWorkspaceConfiguration'))), /*#__PURE__*/React.createElement(AccordionDetails, null, children, /*#__PURE__*/React.createElement("pre", null, this.exportedState())))), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
         onClick: this.handleClose
       }, t('cancel')), /*#__PURE__*/React.createElement(CopyToClipboard, {
         onCopy: this.onCopy,
@@ -144,6 +158,7 @@ export var WorkspaceExport = /*#__PURE__*/function (_Component) {
 }(Component);
 WorkspaceExport.defaultProps = {
   children: null,
+  classes: {},
   container: null,
   open: false,
   t: function t(key) {

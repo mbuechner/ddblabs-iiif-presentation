@@ -10,7 +10,7 @@
     <body>
         <div id="mirador" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
         <script>document.write("<script type='text/javascript' src='mirador-3/mirador.min.js?v=" + Date.now() + "'><\/script>");</script>
-        <script type="text/javascript">
+        <script>
             var getUrlParameter = function (sParam) {
                 var sPageURL = window.location.search.substring(1),
                         sURLVariables = sPageURL.split('&'),
@@ -25,26 +25,18 @@
                     }
                 }
             };
-            var a = getUrlParameter('manifest');
-            var b = a ? decodeURIComponent(a) : "https://wellcomelibrary.org/iiif/b18035723/manifest";
+            const a = getUrlParameter('manifest');
+            const b = a ? decodeURIComponent(a) : "https://wellcomelibrary.org/iiif/b18035723/manifest";
+
             var miradorInstance = Mirador.viewer({
                 id: 'mirador',
-                language: 'de',
-                workspaceControlPanel: {
-                    enabled: false
+                theme: {
+                    transitions: window.location.port === '4488' ? {create: () => 'none'} : {}
                 },
-                windows: [{
-                        manifestId: b,
-                        thumbnailNavigationPosition: 'far-bottom'
-                    }],
-                window: {
-                    panels: {
-                        search: true
-                    }
-                },
-                manifests: {
-                    b: {}
-                }
+                windows: [
+                    {
+                        manifestId: b
+                    }]
             });
         </script>
     </body>

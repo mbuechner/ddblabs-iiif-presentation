@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { TreeNode } from 'manifesto.js/dist-esmodule/TreeNode';
+import { TreeNode } from 'manifesto.js';
 import { getManifestoInstance } from './manifests';
 import { getWindow } from './getters';
 export var getSequences = createSelector([getManifestoInstance], function (manifest) {

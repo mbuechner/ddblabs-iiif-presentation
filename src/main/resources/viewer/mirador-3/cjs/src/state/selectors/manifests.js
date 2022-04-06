@@ -3,19 +3,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getManifestThumbnail = getManifestThumbnail;
 exports.getDestructuredMetadata = getDestructuredMetadata;
-exports.getManifestAutocompleteService = exports.getManifestSearchService = exports.getMetadataLocales = exports.getManifestMetadata = exports.getManifestUrl = exports.getManifestDescription = exports.getManifestTitle = exports.getRights = exports.getRequiredStatement = exports.getManifestRelatedContent = exports.getManifestRenderings = exports.getManifestHomepage = exports.getManifestProvider = exports.getManifestLogo = exports.getManifestLocale = exports.getManifestoInstance = exports.getManifestError = exports.getManifestStatus = void 0;
+exports.getManifestStatus = exports.getManifestSearchService = exports.getManifestRenderings = exports.getManifestRelatedContent = exports.getManifestProvider = exports.getManifestMetadata = exports.getManifestLogo = exports.getManifestLocale = exports.getManifestHomepage = exports.getManifestError = exports.getManifestDescription = exports.getManifestAutocompleteService = void 0;
+exports.getManifestThumbnail = getManifestThumbnail;
+exports.getRights = exports.getRequiredStatement = exports.getMetadataLocales = exports.getManifestoInstance = exports.getManifestUrl = exports.getManifestTitle = void 0;
 
 var _reselect = require("reselect");
 
 var _reReselect = _interopRequireDefault(require("re-reselect"));
 
-var _PropertyValue = require("manifesto.js/dist-esmodule/PropertyValue");
-
-var _Utils = require("manifesto.js/dist-esmodule/Utils");
+var _manifesto = require("manifesto.js");
 
 var _ThumbnailFactory = _interopRequireDefault(require("../../lib/ThumbnailFactory"));
+
+var _asArray = _interopRequireDefault(require("../../lib/asArray"));
 
 var _companionWindows = require("./companionWindows");
 
@@ -31,7 +32,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -41,7 +42,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function createManifestoInstance(json, locale) {
   if (!json) return undefined;
 
-  var manifestoObject = _Utils.Utils.parseManifest(json, locale ? {
+  var manifestoObject = _manifesto.Utils.parseManifest(json, locale ? {
     locale: locale
   } : undefined); // Local patching of Manifesto so that when its a Collection, it behaves similarly
 
@@ -134,20 +135,8 @@ var getManifestLogo = (0, _reselect.createSelector)([getManifestoInstance], func
 
 exports.getManifestLogo = getManifestLogo;
 var getManifestProvider = (0, _reselect.createSelector)([getProperty('provider'), getManifestLocale], function (provider, locale) {
-  return provider && provider[0].label && _PropertyValue.PropertyValue.parse(provider[0].label, locale).getValue();
+  return provider && provider[0].label && _manifesto.PropertyValue.parse(provider[0].label, locale).getValue();
 });
-/**
- */
-
-exports.getManifestProvider = getManifestProvider;
-
-function asArray(value) {
-  if (!Array.isArray(value)) {
-    return [value];
-  }
-
-  return value;
-}
 /**
 * Return the IIIF v3 homepage of a manifest or null
 * @param {object} state
@@ -157,11 +146,11 @@ function asArray(value) {
 * @return {String|null}
 */
 
-
+exports.getManifestProvider = getManifestProvider;
 var getManifestHomepage = (0, _reselect.createSelector)([getProperty('homepage'), getManifestLocale], function (homepages, locale) {
-  return homepages && asArray(homepages).map(function (homepage) {
+  return homepages && (0, _asArray["default"])(homepages).map(function (homepage) {
     return {
-      label: _PropertyValue.PropertyValue.parse(homepage.label, locale).getValue(),
+      label: _manifesto.PropertyValue.parse(homepage.label, locale).getValue(),
       value: homepage.id || homepage['@id']
     };
   });
@@ -195,10 +184,10 @@ var getManifestRenderings = (0, _reselect.createSelector)([getManifestoInstance]
 
 exports.getManifestRenderings = getManifestRenderings;
 var getManifestRelatedContent = (0, _reselect.createSelector)([getProperty('seeAlso'), getManifestLocale], function (seeAlso, locale) {
-  return seeAlso && asArray(seeAlso).map(function (related) {
+  return seeAlso && (0, _asArray["default"])(seeAlso).map(function (related) {
     return {
       format: related.format,
-      label: _PropertyValue.PropertyValue.parse(related.label, locale).getValue(),
+      label: _manifesto.PropertyValue.parse(related.label, locale).getValue(),
       value: related.id || related['@id']
     };
   });
@@ -214,7 +203,7 @@ var getManifestRelatedContent = (0, _reselect.createSelector)([getProperty('seeA
 
 exports.getManifestRelatedContent = getManifestRelatedContent;
 var getRequiredStatement = (0, _reselect.createSelector)([getManifestoInstance], function (manifest) {
-  return manifest && asArray(manifest.getRequiredStatement()).filter(function (l) {
+  return manifest && (0, _asArray["default"])(manifest.getRequiredStatement()).filter(function (l) {
     return l.getValues().some(function (v) {
       return v;
     });
@@ -237,7 +226,7 @@ var getRequiredStatement = (0, _reselect.createSelector)([getManifestoInstance],
 exports.getRequiredStatement = getRequiredStatement;
 var getRights = (0, _reselect.createSelector)([getProperty('rights'), getProperty('license'), getManifestLocale], function (rights, license, locale) {
   var data = rights || license;
-  return asArray(_PropertyValue.PropertyValue.parse(data, locale).getValues());
+  return (0, _asArray["default"])(_manifesto.PropertyValue.parse(data, locale).getValues());
 });
 /**
 * Return the supplied thumbnail for a manifest or null
@@ -252,10 +241,16 @@ exports.getRights = getRights;
 
 function getManifestThumbnail(state, props) {
   var manifest = getManifestoInstance(state, props);
+
+  var _getConfig = (0, _config.getConfig)(state),
+      _getConfig$thumbnails = _getConfig.thumbnails,
+      thumbnails = _getConfig$thumbnails === void 0 ? {} : _getConfig$thumbnails;
+
   if (!manifest) return undefined;
   var thumbnail = (0, _ThumbnailFactory["default"])(manifest, {
     maxHeight: 80,
-    maxWidth: 120
+    maxWidth: 120,
+    preferredFormats: thumbnails.preferredFormats
   });
   return thumbnail && thumbnail.url;
 }

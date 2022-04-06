@@ -21,11 +21,13 @@ var _Typography = _interopRequireDefault(require("@material-ui/core/Typography")
 
 var _SanitizedHtml = _interopRequireDefault(require("../containers/SanitizedHtml"));
 
+var _ScrollTo = require("./ScrollTo");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -41,7 +43,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -130,7 +132,8 @@ var CanvasAnnotations = /*#__PURE__*/function (_Component) {
           totalSize = _this$props4.totalSize,
           listContainerComponent = _this$props4.listContainerComponent,
           htmlSanitizationRuleSet = _this$props4.htmlSanitizationRuleSet,
-          hoveredAnnotationIds = _this$props4.hoveredAnnotationIds;
+          hoveredAnnotationIds = _this$props4.hoveredAnnotationIds,
+          containerRef = _this$props4.containerRef;
       if (annotations.length === 0) return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null);
       return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement(_Typography["default"], {
         className: classes.sectionHeading,
@@ -142,7 +145,13 @@ var CanvasAnnotations = /*#__PURE__*/function (_Component) {
         autoFocusItem: true,
         variant: "selectedMenu"
       }, annotations.map(function (annotation) {
-        return /*#__PURE__*/_react["default"].createElement(_MenuItem["default"], {
+        return /*#__PURE__*/_react["default"].createElement(_ScrollTo.ScrollTo, {
+          containerRef: containerRef,
+          key: "".concat(annotation.id, "-scroll"),
+          offsetTop: 96 // offset for the height of the form above
+          ,
+          scrollTo: selectedAnnotationId === annotation.id
+        }, /*#__PURE__*/_react["default"].createElement(_MenuItem["default"], {
           button: true,
           component: listContainerComponent,
           className: (0, _clsx2["default"])(classes.annotationListItem, _defineProperty({}, classes.hovered, hoveredAnnotationIds.includes(annotation.id))),
@@ -176,7 +185,7 @@ var CanvasAnnotations = /*#__PURE__*/function (_Component) {
             className: classes.chip,
             key: tag.toString()
           });
-        }))));
+        })))));
       })));
     }
   }]);
@@ -188,6 +197,7 @@ exports.CanvasAnnotations = CanvasAnnotations;
 CanvasAnnotations.defaultProps = {
   annotations: [],
   classes: {},
+  containerRef: undefined,
   hoveredAnnotationIds: [],
   htmlSanitizationRuleSet: 'iiif',
   listContainerComponent: 'li',

@@ -6,7 +6,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -257,14 +257,18 @@ export default {
     en: 'English',
     fr: 'Français',
     ja: '日本語',
+    kr: '한국어',
     lt: 'Lietuvių',
     nl: 'Nederlands',
+    'nb-NO': 'Norwegian Bokmål',
+    pl: 'Polski',
     'pt-BR': 'Português do Brasil',
     vi: 'Tiếng Việt',
     'zh-CN': '中文(简体)',
     'zh-TW': '中文(繁體)',
     it: "Italiano",
-    sr: 'Српски'
+    sr: 'Српски',
+    sv: 'Svenska'
   },
   annotations: {
     htmlSanitizationRuleSet: 'iiif',
@@ -343,7 +347,11 @@ export default {
       behaviors: ['continuous']
     }, {
       key: 'gallery'
-    }]
+    }],
+    elastic: {
+      height: 400,
+      width: 480
+    }
   },
   windows: [// Array of windows to be open when mirador initializes (each object should at least provide a manifestId key with the value of the IIIF presentation manifest to load)
 
@@ -358,6 +366,9 @@ export default {
     // ../lib/MiradorViewer.js `windowAction`
     */
   ],
+  thumbnails: {
+    preferredFormats: ['jpg', 'png', 'webp', 'tif']
+  },
   thumbnailNavigation: {
     defaultPosition: 'off',
     // Which position for the thumbnail navigation to be be displayed. Other possible values are "far-bottom" or "far-right"

@@ -17,7 +17,6 @@ function viewer(config, pluginsOrStruct) {
   return new MiradorViewer(config, struct);
 }
 
-var exports = {
+export default {
   viewer: viewer
 };
-export default exports;

@@ -5,21 +5,21 @@ var _regeneratorRuntime2 = require("@babel/runtime/regenerator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fetchWindowManifest = fetchWindowManifest;
-exports.setCanvasOnNewSequence = setCanvasOnNewSequence;
-exports.setCollectionPath = setCollectionPath;
-exports.fetchCollectionManifests = fetchCollectionManifests;
-exports.setWindowStartingCanvas = setWindowStartingCanvas;
-exports.setWindowDefaultSearchQuery = setWindowDefaultSearchQuery;
-exports.getAnnotationsBySearch = getAnnotationsBySearch;
-exports.setCurrentAnnotationsOnCurrentCanvas = setCurrentAnnotationsOnCurrentCanvas;
-exports.panToFocusedWindow = panToFocusedWindow;
-exports.updateVisibleCanvases = updateVisibleCanvases;
-exports.setCanvasOfFirstSearchResult = setCanvasOfFirstSearchResult;
-exports.setCanvasforSelectedAnnotation = setCanvasforSelectedAnnotation;
-exports.fetchInfoResponses = fetchInfoResponses;
-exports.determineAndShowCollectionDialog = determineAndShowCollectionDialog;
 exports["default"] = windowsSaga;
+exports.determineAndShowCollectionDialog = determineAndShowCollectionDialog;
+exports.fetchCollectionManifests = fetchCollectionManifests;
+exports.fetchInfoResponses = fetchInfoResponses;
+exports.fetchWindowManifest = fetchWindowManifest;
+exports.getAnnotationsBySearch = getAnnotationsBySearch;
+exports.panToFocusedWindow = panToFocusedWindow;
+exports.setCanvasOfFirstSearchResult = setCanvasOfFirstSearchResult;
+exports.setCanvasOnNewSequence = setCanvasOnNewSequence;
+exports.setCanvasforSelectedAnnotation = setCanvasforSelectedAnnotation;
+exports.setCollectionPath = setCollectionPath;
+exports.setCurrentAnnotationsOnCurrentCanvas = setCurrentAnnotationsOnCurrentCanvas;
+exports.setWindowDefaultSearchQuery = setWindowDefaultSearchQuery;
+exports.setWindowStartingCanvas = setWindowStartingCanvas;
+exports.updateVisibleCanvases = updateVisibleCanvases;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -60,7 +60,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 

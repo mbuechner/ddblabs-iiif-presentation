@@ -4,7 +4,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -12,9 +12,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 import { createSelector } from 'reselect';
 import createCachedSelector from 're-reselect';
-import { PropertyValue } from 'manifesto.js/dist-esmodule/PropertyValue';
-import { Utils } from 'manifesto.js/dist-esmodule/Utils';
+import { PropertyValue, Utils } from 'manifesto.js';
 import getThumbnail from '../../lib/ThumbnailFactory';
+import asArray from '../../lib/asArray';
 import { getCompanionWindow } from './companionWindows';
 import { getManifest } from './getters';
 import { getConfig } from './config';
@@ -111,16 +111,6 @@ export var getManifestProvider = createSelector([getProperty('provider'), getMan
   return provider && provider[0].label && PropertyValue.parse(provider[0].label, locale).getValue();
 });
 /**
- */
-
-function asArray(value) {
-  if (!Array.isArray(value)) {
-    return [value];
-  }
-
-  return value;
-}
-/**
 * Return the IIIF v3 homepage of a manifest or null
 * @param {object} state
 * @param {object} props
@@ -128,7 +118,6 @@ function asArray(value) {
 * @param {string} props.windowId
 * @return {String|null}
 */
-
 
 export var getManifestHomepage = createSelector([getProperty('homepage'), getManifestLocale], function (homepages, locale) {
   return homepages && asArray(homepages).map(function (homepage) {
@@ -218,10 +207,16 @@ export var getRights = createSelector([getProperty('rights'), getProperty('licen
 
 export function getManifestThumbnail(state, props) {
   var manifest = getManifestoInstance(state, props);
+
+  var _getConfig = getConfig(state),
+      _getConfig$thumbnails = _getConfig.thumbnails,
+      thumbnails = _getConfig$thumbnails === void 0 ? {} : _getConfig$thumbnails;
+
   if (!manifest) return undefined;
   var thumbnail = getThumbnail(manifest, {
     maxHeight: 80,
-    maxWidth: 120
+    maxWidth: 120,
+    preferredFormats: thumbnails.preferredFormats
   });
   return thumbnail && thumbnail.url;
 }

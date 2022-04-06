@@ -1,3 +1,5 @@
+var _excluded = ["badge", "children", "containerId", "dispatch", "BadgeProps", "TooltipProps"];
+
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
@@ -22,7 +24,7 @@ export function MiradorMenuButton(props) {
       dispatch = props.dispatch,
       BadgeProps = props.BadgeProps,
       TooltipProps = props.TooltipProps,
-      iconButtonProps = _objectWithoutProperties(props, ["badge", "children", "containerId", "dispatch", "BadgeProps", "TooltipProps"]);
+      iconButtonProps = _objectWithoutProperties(props, _excluded);
 
   var button = /*#__PURE__*/React.createElement(IconButton, iconButtonProps, badge ? /*#__PURE__*/React.createElement(Badge, BadgeProps, children) : children);
   if (iconButtonProps.disabled) return button;

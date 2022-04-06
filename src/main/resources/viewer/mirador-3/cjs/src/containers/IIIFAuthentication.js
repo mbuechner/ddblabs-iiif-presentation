@@ -11,7 +11,7 @@ var _redux = require("redux");
 
 var _reactI18next = require("react-i18next");
 
-var _Utils = require("manifesto.js/dist-esmodule/Utils");
+var _manifesto = require("manifesto.js");
 
 var _withPlugins = require("../extend/withPlugins");
 
@@ -21,9 +21,9 @@ var _selectors = require("../state/selectors");
 
 var _IIIFAuthentication = require("../components/IIIFAuthentication");
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 /**
  * mapStateToProps - to hook up connect
@@ -38,9 +38,9 @@ var mapStateToProps = function mapStateToProps(state, _ref) {
 
   var service = services[0];
 
-  var accessTokenService = service && (_Utils.Utils.getService(service, 'http://iiif.io/api/auth/1/token') || _Utils.Utils.getService(service, 'http://iiif.io/api/auth/0/token'));
+  var accessTokenService = service && (_manifesto.Utils.getService(service, 'http://iiif.io/api/auth/1/token') || _manifesto.Utils.getService(service, 'http://iiif.io/api/auth/0/token'));
 
-  var logoutService = service && (_Utils.Utils.getService(service, 'http://iiif.io/api/auth/1/logout') || _Utils.Utils.getService(service, 'http://iiif.io/api/auth/0/logout'));
+  var logoutService = service && (_manifesto.Utils.getService(service, 'http://iiif.io/api/auth/1/logout') || _manifesto.Utils.getService(service, 'http://iiif.io/api/auth/0/logout'));
 
   var authStatuses = (0, _selectors.getAuth)(state);
   var authStatus = service && authStatuses[service.id];

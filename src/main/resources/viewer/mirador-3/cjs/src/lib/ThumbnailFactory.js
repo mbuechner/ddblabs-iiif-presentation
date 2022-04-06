@@ -3,14 +3,16 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = getBestThumbnail;
 exports.ThumbnailFactory = void 0;
+exports["default"] = getBestThumbnail;
 
 var _manifesto = require("manifesto.js");
 
 var _MiradorManifest = _interopRequireDefault(require("./MiradorManifest"));
 
 var _MiradorCanvas = _interopRequireDefault(require("./MiradorCanvas"));
+
+var _asArray = _interopRequireDefault(require("./asArray"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -21,13 +23,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 /** */
-function asArray(value) {
-  if (value === undefined) return [];
-  return Array.isArray(value) ? value : [value];
-}
-/** */
-
-
 function isLevel0ImageProfile(service) {
   var profile = service.getProfile(); // work around a bug in manifesto with normalized urls that strip # values.
 
@@ -52,7 +47,7 @@ function isLevel2ImageProfile(service) {
 
 function iiifv3ImageServiceType(service) {
   var type = service.getProperty('type') || [];
-  return asArray(type).some(function (v) {
+  return (0, _asArray["default"])(type).some(function (v) {
     return v.startsWith('ImageService');
   });
 }
@@ -154,12 +149,45 @@ var ThumbnailFactory = /*#__PURE__*/function () {
       var quality = _manifesto.Utils.getImageQuality(service.getProfile());
 
       var id = service.id.replace(/\/+$/, '');
-      var format = 'jpg';
+      var format = this.getFormat(service);
       return {
         height: height,
         url: [id, region, size, 0, "".concat(quality, ".").concat(format)].join('/'),
         width: width
       };
+    }
+    /**
+     * Figure out what format thumbnail to use by looking at the preferred formats
+     * on offer, and selecting a format shared in common with the application's
+     * preferred format list.
+     *
+     * Fall back to jpg, which is required to work for all IIIF services.
+     */
+
+  }, {
+    key: "getFormat",
+    value: function getFormat(service) {
+      var _this$iiifOpts$prefer = this.iiifOpts.preferredFormats,
+          preferredFormats = _this$iiifOpts$prefer === void 0 ? [] : _this$iiifOpts$prefer;
+      var servicePreferredFormats = service.getProperty('preferredFormats');
+      if (!servicePreferredFormats) return 'jpg';
+      var filteredFormats = servicePreferredFormats.filter(function (value) {
+        return preferredFormats.includes(value);
+      }); // this is a format found in common between the preferred formats of the service
+      // and the application
+
+      if (filteredFormats[0]) return filteredFormats[0]; // IIIF Image API guarantees jpg support; if it wasn't provided by the service
+      // but the application is fine with it, we might as well try it.
+
+      if (!servicePreferredFormats.includes('jpg') && preferredFormats.includes('jpg')) {
+        return 'jpg';
+      } // there were no formats in common, and the application didn't want jpg... so
+      // just trust that the IIIF service is advertising something useful?
+
+
+      if (servicePreferredFormats[0]) return servicePreferredFormats[0]; // JPG support is guaranteed by the spec, so it's a good worst-case fallback
+
+      return 'jpg';
     }
     /**
      * Determines the content resource from which to derive a thumbnail to represent a given resource.
@@ -262,7 +290,7 @@ var ThumbnailFactory = /*#__PURE__*/function () {
   }, {
     key: "selectBestImageSize",
     value: function selectBestImageSize(service, targetArea) {
-      var sizes = asArray(service.getProperty('sizes'));
+      var sizes = (0, _asArray["default"])(service.getProperty('sizes'));
       var closestSize = {
         "default": true,
         height: service.getProperty('height') || Number.MAX_SAFE_INTEGER,

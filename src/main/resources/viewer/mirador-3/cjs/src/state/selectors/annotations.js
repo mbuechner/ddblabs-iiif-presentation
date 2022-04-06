@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getSelectedAnnotationsOnCanvases = exports.getSelectedAnnotationId = exports.getAnnotationResourcesByMotivation = exports.getAnnotationResourcesByMotivationForCanvas = exports.getPresentAnnotationsOnSelectedCanvases = exports.getAnnotations = void 0;
+exports.getSelectedAnnotationsOnCanvases = exports.getSelectedAnnotationId = exports.getPresentAnnotationsOnSelectedCanvases = exports.getAnnotations = exports.getAnnotationResourcesByMotivationForCanvas = exports.getAnnotationResourcesByMotivation = void 0;
 
 var _reselect = require("reselect");
 
@@ -20,6 +20,8 @@ var _canvases = require("./canvases");
 var _config = require("./config");
 
 var _getters = require("./getters");
+
+var _excluded = ["canvasId"];
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -53,7 +55,7 @@ var getPresentAnnotationsCanvas = (0, _reselect.createSelector)([getAnnotationsO
 });
 var getAnnotationsOnSelectedCanvases = (0, _reselect.createSelector)([function (state, _ref2) {
   var canvasId = _ref2.canvasId,
-      otherProps = _objectWithoutProperties(_ref2, ["canvasId"]);
+      otherProps = _objectWithoutProperties(_ref2, _excluded);
 
   return canvasId ? [canvasId] : (0, _canvases.getVisibleCanvasIds)(state, otherProps);
 }, getAnnotations], function (canvasIds, annotations) {

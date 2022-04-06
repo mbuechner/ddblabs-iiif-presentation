@@ -1,4 +1,6 @@
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+var _excluded = ["companionWindows", "manifest"];
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -10,7 +12,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -48,7 +50,7 @@ export function focusWindow(windowId) {
 export function addWindow(_ref) {
   var companionWindows = _ref.companionWindows,
       manifest = _ref.manifest,
-      options = _objectWithoutProperties(_ref, ["companionWindows", "manifest"]);
+      options = _objectWithoutProperties(_ref, _excluded);
 
   return function (dispatch, getState) {
     var _miradorSlice = miradorSlice(getState()),
@@ -100,12 +102,15 @@ export function addWindow(_ref) {
       sideBarPanel: options.sideBarPanel || config.window.defaultSideBarPanel || config.window.sideBarPanel,
       thumbnailNavigationId: cwThumbs
     };
-    var elasticLayout = {
+
+    var elasticLayout = _objectSpread(_objectSpread({}, config.window.elastic || {
       height: 400,
-      width: 400,
+      width: 480
+    }), {}, {
       x: 200 + (Math.floor(numWindows / 10) * 50 + numWindows * 30 % 300),
       y: 200 + numWindows * 50 % 300
-    };
+    });
+
     dispatch({
       companionWindows: defaultCompanionWindows,
       elasticLayout: elasticLayout,

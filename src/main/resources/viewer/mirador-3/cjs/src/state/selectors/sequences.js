@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getSequenceTreeStructure = exports.getSequenceBehaviors = exports.getSequenceViewingDirection = exports.getSequenceViewingHint = exports.getCanvasIndex = exports.getSequence = exports.getSequences = void 0;
+exports.getSequences = exports.getSequenceViewingHint = exports.getSequenceViewingDirection = exports.getSequenceTreeStructure = exports.getSequenceBehaviors = exports.getSequence = exports.getCanvasIndex = void 0;
 
 var _reselect = require("reselect");
 
-var _TreeNode = require("manifesto.js/dist-esmodule/TreeNode");
+var _manifesto = require("manifesto.js");
 
 var _manifests = require("./manifests");
 
@@ -110,7 +110,7 @@ var getSequenceBehaviors = (0, _reselect.createSelector)([getSequence, _manifest
 
 exports.getSequenceBehaviors = getSequenceBehaviors;
 var getSequenceTreeStructure = (0, _reselect.createSelector)([getSequence, _manifests.getManifestoInstance], function (sequence, manifest) {
-  if (sequence && sequence.getProperty('type') && sequence.isRange()) return sequence.getTree(new _TreeNode.TreeNode('root'));
+  if (sequence && sequence.getProperty('type') && sequence.isRange()) return sequence.getTree(new _manifesto.TreeNode('root'));
   return manifest && manifest.getDefaultTree();
 });
 exports.getSequenceTreeStructure = getSequenceTreeStructure;

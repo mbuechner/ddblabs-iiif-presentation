@@ -3,14 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getCatalog = getCatalog;
+exports.getManifest = getManifest;
+exports.getManifests = getManifests;
+exports.getViewer = void 0;
+exports.getWindow = getWindow;
+exports.getWindowIds = void 0;
 exports.getWindowManifests = getWindowManifests;
 exports.getWindows = getWindows;
-exports.getWindow = getWindow;
 exports.getWorkspace = getWorkspace;
-exports.getManifests = getManifests;
-exports.getManifest = getManifest;
-exports.getCatalog = getCatalog;
-exports.getWindowIds = exports.getViewer = void 0;
 
 var _reselect = require("reselect");
 

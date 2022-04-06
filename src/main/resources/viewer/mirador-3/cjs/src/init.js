@@ -26,8 +26,7 @@ function viewer(config, pluginsOrStruct) {
   return new _MiradorViewer["default"](config, struct);
 }
 
-var _exports = {
+var _default = {
   viewer: viewer
 };
-var _default = _exports;
 exports["default"] = _default;

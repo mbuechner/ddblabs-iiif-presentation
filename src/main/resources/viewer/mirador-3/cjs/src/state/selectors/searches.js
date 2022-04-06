@@ -3,12 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getSortedSearchHitsForCompanionWindow = exports.getSortedSearchAnnotationsForCompanionWindow = exports.getSelectedContentSearchAnnotationIds = exports.getSearchQuery = exports.getSearchNumTotal = exports.getSearchIsFetching = exports.getSearchForWindow = exports.getSearchAnnotationsForWindow = exports.getSearchAnnotationsForCompanionWindow = exports.getResourceAnnotationLabel = exports.getResourceAnnotationForSearchHit = exports.getNextSearchId = exports.getCanvasForAnnotation = void 0;
 exports.sortSearchAnnotationsByCanvasOrder = sortSearchAnnotationsByCanvasOrder;
-exports.getCanvasForAnnotation = exports.getResourceAnnotationLabel = exports.getResourceAnnotationForSearchHit = exports.getSelectedContentSearchAnnotationIds = exports.getSearchAnnotationsForWindow = exports.getSortedSearchAnnotationsForCompanionWindow = exports.getSearchAnnotationsForCompanionWindow = exports.getSortedSearchHitsForCompanionWindow = exports.getNextSearchId = exports.getSearchNumTotal = exports.getSearchIsFetching = exports.getSearchQuery = exports.getSearchForWindow = void 0;
 
 var _reselect = require("reselect");
 
-var _PropertyValue = require("manifesto.js/dist-esmodule/PropertyValue");
+var _manifesto = require("manifesto.js");
 
 var _flatten = _interopRequireDefault(require("lodash/flatten"));
 
@@ -176,7 +176,7 @@ var getResourceAnnotationForSearchHit = (0, _reselect.createSelector)([getSearch
 exports.getResourceAnnotationForSearchHit = getResourceAnnotationForSearchHit;
 var getResourceAnnotationLabel = (0, _reselect.createSelector)([getResourceAnnotationForSearchHit, _manifests.getManifestLocale], function (resourceAnnotation, locale) {
   if (!(resourceAnnotation && resourceAnnotation.resource && resourceAnnotation.resource.label)) return [];
-  return _PropertyValue.PropertyValue.parse(resourceAnnotation.resource.label, locale).getValues();
+  return _manifesto.PropertyValue.parse(resourceAnnotation.resource.label, locale).getValues();
 });
 exports.getResourceAnnotationLabel = getResourceAnnotationLabel;
 var getAnnotationById = (0, _reselect.createSelector)([getSearchAnnotationsForWindow, function (state, _ref5) {

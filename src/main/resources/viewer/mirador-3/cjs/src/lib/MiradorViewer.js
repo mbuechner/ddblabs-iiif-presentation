@@ -11,15 +11,11 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _reactRedux = require("react-redux");
 
-var _deepmerge = _interopRequireDefault(require("deepmerge"));
-
 var _App = _interopRequireDefault(require("../components/App"));
 
-var _createStore = _interopRequireDefault(require("../state/createStore"));
-
-var _config = require("../state/actions/config");
-
 var _pluginPreprocessing = require("../extend/pluginPreprocessing");
+
+var _createPluggableStore = _interopRequireDefault(require("../state/createPluggableStore"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -40,26 +36,25 @@ var MiradorViewer = /*#__PURE__*/function () {
 
     _classCallCheck(this, MiradorViewer);
 
-    this.config = config;
     this.plugins = (0, _pluginPreprocessing.filterValidPlugins)(viewerConfig.plugins || []);
-    this.store = viewerConfig.store || (0, _createStore["default"])((0, _pluginPreprocessing.getReducersFromPlugins)(this.plugins), (0, _pluginPreprocessing.getSagasFromPlugins)(this.plugins));
-    this.processConfig();
-
-    _reactDom["default"].render( /*#__PURE__*/_react["default"].createElement(_reactRedux.Provider, {
-      store: this.store
-    }, /*#__PURE__*/_react["default"].createElement(_App["default"], {
-      plugins: this.plugins
-    })), document.getElementById(config.id));
+    this.config = config;
+    this.store = viewerConfig.store || (0, _createPluggableStore["default"])(this.config, this.plugins);
+    config.id && _reactDom["default"].render(this.render(), document.getElementById(config.id));
   }
   /**
-   * Process config with plugin configs into actions
+   * Render the mirador viewer
    */
 
 
   _createClass(MiradorViewer, [{
-    key: "processConfig",
-    value: function processConfig() {
-      this.store.dispatch((0, _config.importConfig)((0, _deepmerge["default"])((0, _pluginPreprocessing.getConfigFromPlugins)(this.plugins), this.config)));
+    key: "render",
+    value: function render() {
+      var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      return /*#__PURE__*/_react["default"].createElement(_reactRedux.Provider, {
+        store: this.store
+      }, /*#__PURE__*/_react["default"].createElement(_App["default"], Object.assign({
+        plugins: this.plugins
+      }, props)));
     }
     /**
      * Cleanup method to unmount Mirador from the dom
@@ -68,7 +63,7 @@ var MiradorViewer = /*#__PURE__*/function () {
   }, {
     key: "unmount",
     value: function unmount() {
-      _reactDom["default"].unmountComponentAtNode(document.getElementById(this.config.id));
+      this.config.id && _reactDom["default"].unmountComponentAtNode(document.getElementById(this.config.id));
     }
   }]);
 

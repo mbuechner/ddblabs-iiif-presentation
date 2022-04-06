@@ -15,23 +15,31 @@ var _DialogActions = _interopRequireDefault(require("@material-ui/core/DialogAct
 
 var _DialogTitle = _interopRequireDefault(require("@material-ui/core/DialogTitle"));
 
+var _DialogContent = _interopRequireDefault(require("@material-ui/core/DialogContent"));
+
 var _Typography = _interopRequireDefault(require("@material-ui/core/Typography"));
 
 var _Snackbar = _interopRequireDefault(require("@material-ui/core/Snackbar"));
 
 var _IconButton = _interopRequireDefault(require("@material-ui/core/IconButton"));
 
+var _ExpandMore = _interopRequireDefault(require("@material-ui/icons/ExpandMore"));
+
 var _Close = _interopRequireDefault(require("@material-ui/icons/Close"));
+
+var _Accordion = _interopRequireDefault(require("@material-ui/core/Accordion"));
+
+var _AccordionSummary = _interopRequireDefault(require("@material-ui/core/AccordionSummary"));
+
+var _AccordionDetails = _interopRequireDefault(require("@material-ui/core/AccordionDetails"));
 
 var _reactCopyToClipboard = require("react-copy-to-clipboard");
 
-var _ScrollIndicatedDialogContent = _interopRequireDefault(require("../containers/ScrollIndicatedDialogContent"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -45,7 +53,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -112,6 +120,7 @@ var WorkspaceExport = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this$props = this.props,
           children = _this$props.children,
+          classes = _this$props.classes,
           container = _this$props.container,
           open = _this$props.open,
           t = _this$props.t;
@@ -151,7 +160,16 @@ var WorkspaceExport = /*#__PURE__*/function (_Component) {
         disableTypography: true
       }, /*#__PURE__*/_react["default"].createElement(_Typography["default"], {
         variant: "h2"
-      }, t('downloadExport'))), /*#__PURE__*/_react["default"].createElement(_ScrollIndicatedDialogContent["default"], null, children, /*#__PURE__*/_react["default"].createElement("pre", null, this.exportedState())), /*#__PURE__*/_react["default"].createElement(_DialogActions["default"], null, /*#__PURE__*/_react["default"].createElement(_Button["default"], {
+      }, t('downloadExport'))), /*#__PURE__*/_react["default"].createElement(_DialogContent["default"], null, /*#__PURE__*/_react["default"].createElement(_Accordion["default"], {
+        elevation: 0
+      }, /*#__PURE__*/_react["default"].createElement(_AccordionSummary["default"], {
+        classes: {
+          root: classes.accordionTitle
+        },
+        expandIcon: /*#__PURE__*/_react["default"].createElement(_ExpandMore["default"], null)
+      }, /*#__PURE__*/_react["default"].createElement(_Typography["default"], {
+        variant: "h4"
+      }, t('viewWorkspaceConfiguration'))), /*#__PURE__*/_react["default"].createElement(_AccordionDetails["default"], null, children, /*#__PURE__*/_react["default"].createElement("pre", null, this.exportedState())))), /*#__PURE__*/_react["default"].createElement(_DialogActions["default"], null, /*#__PURE__*/_react["default"].createElement(_Button["default"], {
         onClick: this.handleClose
       }, t('cancel')), /*#__PURE__*/_react["default"].createElement(_reactCopyToClipboard.CopyToClipboard, {
         onCopy: this.onCopy,
@@ -169,6 +187,7 @@ var WorkspaceExport = /*#__PURE__*/function (_Component) {
 exports.WorkspaceExport = WorkspaceExport;
 WorkspaceExport.defaultProps = {
   children: null,
+  classes: {},
   container: null,
   open: false,
   t: function t(key) {

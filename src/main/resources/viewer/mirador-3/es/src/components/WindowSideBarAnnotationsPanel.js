@@ -10,7 +10,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -33,19 +33,26 @@ export var WindowSideBarAnnotationsPanel = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(WindowSideBarAnnotationsPanel);
 
-  function WindowSideBarAnnotationsPanel() {
+  /** */
+  function WindowSideBarAnnotationsPanel(props) {
+    var _this;
+
     _classCallCheck(this, WindowSideBarAnnotationsPanel);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props);
+    _this.containerRef = /*#__PURE__*/React.createRef();
+    return _this;
   }
+  /**
+   * Returns the rendered component
+  */
+
 
   _createClass(WindowSideBarAnnotationsPanel, [{
     key: "render",
-    value:
-    /**
-     * Returns the rendered component
-    */
-    function render() {
+    value: function render() {
+      var _this2 = this;
+
       var _this$props = this.props,
           annotationCount = _this$props.annotationCount,
           classes = _this$props.classes,
@@ -58,6 +65,8 @@ export var WindowSideBarAnnotationsPanel = /*#__PURE__*/function (_Component) {
         paperClassName: ns('window-sidebar-annotation-panel'),
         windowId: windowId,
         id: id,
+        ref: this.containerRef,
+        otherRef: this.containerRef,
         titleControls: /*#__PURE__*/React.createElement(AnnotationSettings, {
           windowId: windowId
         })
@@ -67,10 +76,12 @@ export var WindowSideBarAnnotationsPanel = /*#__PURE__*/function (_Component) {
         component: "p",
         variant: "subtitle2"
       }, t('showingNumAnnotations', {
+        count: annotationCount,
         number: annotationCount
       }))), canvasIds.map(function (canvasId, index) {
         return /*#__PURE__*/React.createElement(CanvasAnnotations, {
           canvasId: canvasId,
+          containerRef: _this2.containerRef,
           key: canvasId,
           index: index,
           totalSize: canvasIds.length,

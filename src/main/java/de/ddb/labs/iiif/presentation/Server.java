@@ -26,9 +26,10 @@ import com.github.rjeschke.txtmark.Processor;
 import de.ddb.labs.iiif.presentation.helper.Configuration;
 import de.ddb.labs.iiif.presentation.helper.NaturalOrderComparator;
 import io.javalin.Javalin;
+import io.javalin.http.ContentType;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.json.JavalinJackson;
-import io.javalin.plugin.openapi.annotations.ContentType;
+import io.javalin.plugin.json.JsonMapper;
 import io.javalin.plugin.rendering.vue.JavalinVue;
 import io.javalin.plugin.rendering.vue.VueComponent;
 import java.io.File;
@@ -192,9 +193,9 @@ public class Server {
     public void start() throws Exception {
 
         // final String files = folder.toString() + File.separator + Configuration.get().getValue("iiif-presentation.folder");
-        JavalinJackson.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        JavalinJackson.getObjectMapper().enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
-        JavalinJackson.getObjectMapper().setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+        JavalinJackson.Companion.defaultMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        JavalinJackson.Companion.defaultMapper().enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
+        JavalinJackson.Companion.defaultMapper().setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 
         final Javalin app = Javalin.create(config -> {
             config.enableCorsForAllOrigins();
@@ -204,7 +205,7 @@ public class Server {
             if (Configuration.get().getValue("iiif-presentation.pathprefix").isBlank()) {
                 config.addStaticFiles("viewer/", Location.CLASSPATH);
             } else {
-                config.addStaticFiles(Configuration.get().getValue("iiif-presentation.pathprefix"), "viewer/", Location.CLASSPATH);
+                config.addStaticFiles(Configuration.get().getValue("iiif-presentation.pathprefix"), Location.CLASSPATH);
             }
 
             config.requestLogger((ctx, timeMs) -> {
@@ -249,7 +250,7 @@ public class Server {
         app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/file", ctx -> {
 
             final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
-                String f = ctx.queryParam("f", "");
+                String f = ctx.queryParam("f");
                 if (f != null && !f.isEmpty()) {
                     f = f.replaceAll("\\.\\." + StringEscapeUtils.escapeJava(File.separator) + "|\\.\\./", "");
                     f = StringUtils.strip(f, File.separator + "/");
@@ -268,7 +269,8 @@ public class Server {
                     return String.format("{\"error\":\"404\",\"message\": \"%s\"}", StringEscapeUtils.escapeJson(ex.getMessage()));
                 }
             });
-            ctx.contentType(ContentType.JSON).result(future);
+            
+            ctx.contentType(ContentType.APPLICATION_JSON).future(future);
         });
 
         app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/configuration", ctx -> {
@@ -280,7 +282,7 @@ public class Server {
          */
         app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/browse", ctx -> {
 
-            String d = ctx.queryParam("d", "");
+            String d = ctx.queryParam("d");
             if (d != null && !d.isEmpty()) {
                 d = StringUtils.endsWith(d, "\\/") ? d : d + File.separator;
                 d = d.replaceAll("\\.\\." + StringEscapeUtils.escapeJava(File.separator) + "|\\.\\./", "");
@@ -347,8 +349,9 @@ public class Server {
          */
         app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/description", ctx -> {
 
+            
             final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
-                String f = ctx.queryParam("f", "");
+                String f = ctx.queryParam("f");
                 if (f != null && !f.isEmpty()) {
                     f = f.replaceAll("\\.\\." + StringEscapeUtils.escapeJava(File.separator) + "|\\.\\./", "");
                     f = StringUtils.strip(f, File.separator + "/");
@@ -362,7 +365,7 @@ public class Server {
                 try {
                     final String r = FileUtils.readFileToString(file.toFile(), Charset.forName("UTF-8"));
                     final String m = Processor.process(r);
-                    final String j = JavalinJackson.INSTANCE.toJson(Map.of("content", m));
+                    final String j = mapper.writeValueAsString(Map.of("content", m));
                     ctx.status(200);
                     return j;
                 } catch (IOException ex) {
@@ -370,7 +373,8 @@ public class Server {
                     return String.format("{\"error\":\"404\",\"message\": \"%s\"}", StringEscapeUtils.escapeJson(ex.getMessage()));
                 }
             });
-            ctx.contentType(ContentType.JSON).result(future);
+            ctx.contentType(ContentType.APPLICATION_JSON).future(future);
+            
         });
 
         /**

@@ -23,17 +23,25 @@ var _translation6 = _interopRequireDefault(require("./locales/fr/translation.jso
 
 var _translation7 = _interopRequireDefault(require("./locales/ja/translation.json"));
 
-var _translation8 = _interopRequireDefault(require("./locales/nl/translation.json"));
+var _translation8 = _interopRequireDefault(require("./locales/kr/translation.json"));
 
-var _translation9 = _interopRequireDefault(require("./locales/ptBr/translation.json"));
+var _translation9 = _interopRequireDefault(require("./locales/nl/translation.json"));
 
-var _translation10 = _interopRequireDefault(require("./locales/it/translation.json"));
+var _translation10 = _interopRequireDefault(require("./locales/pl/translation.json"));
 
-var _translation11 = _interopRequireDefault(require("./locales/sr/translation.json"));
+var _translation11 = _interopRequireDefault(require("./locales/ptBr/translation.json"));
 
-var _translation12 = _interopRequireDefault(require("./locales/lt/translation.json"));
+var _translation12 = _interopRequireDefault(require("./locales/it/translation.json"));
 
-var _translation13 = _interopRequireDefault(require("./locales/vi/translation.json"));
+var _translation13 = _interopRequireDefault(require("./locales/sr/translation.json"));
+
+var _translation14 = _interopRequireDefault(require("./locales/sv/translation.json"));
+
+var _translation15 = _interopRequireDefault(require("./locales/lt/translation.json"));
+
+var _translation16 = _interopRequireDefault(require("./locales/vi/translation.json"));
+
+var _translation17 = _interopRequireDefault(require("./locales/nbNo/translation.json"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -46,13 +54,17 @@ function createI18nInstance() {
     de: _translation2["default"],
     en: _translation3["default"],
     fr: _translation6["default"],
-    it: _translation10["default"],
+    it: _translation12["default"],
     ja: _translation7["default"],
-    lt: _translation12["default"],
-    nl: _translation8["default"],
-    'pt-BR': _translation9["default"],
-    sr: _translation11["default"],
-    vi: _translation13["default"],
+    kr: _translation8["default"],
+    lt: _translation15["default"],
+    'nb-NO': _translation17["default"],
+    nl: _translation9["default"],
+    pl: _translation10["default"],
+    'pt-BR': _translation11["default"],
+    sr: _translation13["default"],
+    sv: _translation14["default"],
+    vi: _translation16["default"],
     'zh-CN': _translation4["default"],
     'zh-TW': _translation5["default"]
   };

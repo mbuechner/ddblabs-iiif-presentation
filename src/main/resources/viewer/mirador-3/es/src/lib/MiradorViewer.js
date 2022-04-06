@@ -7,11 +7,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import deepmerge from 'deepmerge';
 import HotApp from '../components/App';
-import createStore from '../state/createStore';
-import { importConfig } from '../state/actions/config';
-import { filterValidPlugins, getConfigFromPlugins, getReducersFromPlugins, getSagasFromPlugins } from '../extend/pluginPreprocessing';
+import { filterValidPlugins } from '../extend/pluginPreprocessing';
+import createPluggableStore from '../state/createPluggableStore';
 /**
  * Default Mirador instantiation
  */
@@ -24,25 +22,25 @@ var MiradorViewer = /*#__PURE__*/function () {
 
     _classCallCheck(this, MiradorViewer);
 
-    this.config = config;
     this.plugins = filterValidPlugins(viewerConfig.plugins || []);
-    this.store = viewerConfig.store || createStore(getReducersFromPlugins(this.plugins), getSagasFromPlugins(this.plugins));
-    this.processConfig();
-    ReactDOM.render( /*#__PURE__*/React.createElement(Provider, {
-      store: this.store
-    }, /*#__PURE__*/React.createElement(HotApp, {
-      plugins: this.plugins
-    })), document.getElementById(config.id));
+    this.config = config;
+    this.store = viewerConfig.store || createPluggableStore(this.config, this.plugins);
+    config.id && ReactDOM.render(this.render(), document.getElementById(config.id));
   }
   /**
-   * Process config with plugin configs into actions
+   * Render the mirador viewer
    */
 
 
   _createClass(MiradorViewer, [{
-    key: "processConfig",
-    value: function processConfig() {
-      this.store.dispatch(importConfig(deepmerge(getConfigFromPlugins(this.plugins), this.config)));
+    key: "render",
+    value: function render() {
+      var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      return /*#__PURE__*/React.createElement(Provider, {
+        store: this.store
+      }, /*#__PURE__*/React.createElement(HotApp, Object.assign({
+        plugins: this.plugins
+      }, props)));
     }
     /**
      * Cleanup method to unmount Mirador from the dom
@@ -51,7 +49,7 @@ var MiradorViewer = /*#__PURE__*/function () {
   }, {
     key: "unmount",
     value: function unmount() {
-      ReactDOM.unmountComponentAtNode(document.getElementById(this.config.id));
+      this.config.id && ReactDOM.unmountComponentAtNode(document.getElementById(this.config.id));
     }
   }]);
 

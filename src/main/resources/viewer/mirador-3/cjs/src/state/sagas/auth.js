@@ -3,18 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.refetchInfoResponsesOnLogout = refetchInfoResponsesOnLogout;
-exports.refetchInfoResponses = refetchInfoResponses;
-exports.doAuthWorkflow = doAuthWorkflow;
-exports.rerequestOnAccessTokenFailure = rerequestOnAccessTokenFailure;
-exports.invalidateInvalidAuth = invalidateInvalidAuth;
 exports["default"] = authSaga;
+exports.doAuthWorkflow = doAuthWorkflow;
+exports.invalidateInvalidAuth = invalidateInvalidAuth;
+exports.refetchInfoResponses = refetchInfoResponses;
+exports.refetchInfoResponsesOnLogout = refetchInfoResponsesOnLogout;
+exports.rerequestOnAccessTokenFailure = rerequestOnAccessTokenFailure;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _effects = require("redux-saga/effects");
 
-var _Utils = require("manifesto.js/dist-esmodule/Utils");
+var _manifesto = require("manifesto.js");
 
 var _flatten = _interopRequireDefault(require("lodash/flatten"));
 
@@ -101,10 +101,10 @@ function refetchInfoResponses(_ref2) {
 
           /** */
           haveThisTokenService = function haveThisTokenService(infoResponse) {
-            var services = _Utils.Utils.getServices(infoResponse);
+            var services = _manifesto.Utils.getServices(infoResponse);
 
             return services.some(function (e) {
-              var infoTokenService = _Utils.Utils.getService(e, 'http://iiif.io/api/auth/1/token') || _Utils.Utils.getService(e, 'http://iiif.io/api/auth/0/token');
+              var infoTokenService = _manifesto.Utils.getService(e, 'http://iiif.io/api/auth/1/token') || _manifesto.Utils.getService(e, 'http://iiif.io/api/auth/0/token');
 
               return infoTokenService && infoTokenService.id === serviceId;
             });
@@ -164,7 +164,7 @@ function doAuthWorkflow(_ref4) {
             return p.external || p.kiosk;
           }); // try to get an untried, non-interactive auth service
 
-          authService = _Utils.Utils.getServices(infoJson).filter(function (s) {
+          authService = _manifesto.Utils.getServices(infoJson).filter(function (s) {
             return !auths[s.id];
           }).find(function (e) {
             return nonInteractiveAuthFlowProfiles.some(function (p) {
@@ -202,7 +202,7 @@ function doAuthWorkflow(_ref4) {
             break;
           }
 
-          tokenService = _Utils.Utils.getService(authService, 'http://iiif.io/api/auth/1/token') || _Utils.Utils.getService(authService, 'http://iiif.io/api/auth/0/token');
+          tokenService = _manifesto.Utils.getService(authService, 'http://iiif.io/api/auth/1/token') || _manifesto.Utils.getService(authService, 'http://iiif.io/api/auth/0/token');
 
           if (tokenService) {
             _context3.next = 24;
@@ -246,8 +246,8 @@ function rerequestOnAccessTokenFailure(_ref5) {
 
         case 3:
           // make sure we have an auth service to try
-          authService = _Utils.Utils.getServices(infoJson).find(function (service) {
-            var tokenService = _Utils.Utils.getService(service, 'http://iiif.io/api/auth/1/token') || _Utils.Utils.getService(service, 'http://iiif.io/api/auth/0/token');
+          authService = _manifesto.Utils.getServices(infoJson).find(function (service) {
+            var tokenService = _manifesto.Utils.getService(service, 'http://iiif.io/api/auth/1/token') || _manifesto.Utils.getService(service, 'http://iiif.io/api/auth/0/token');
 
             return tokenService && tokenService.id === tokenServiceId;
           });

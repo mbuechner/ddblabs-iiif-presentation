@@ -1,11 +1,11 @@
-FROM maven:3-openjdk-15-slim AS MAVEN_CHAIN
+FROM maven:3-openjdk-17-slim AS MAVEN_CHAIN
 MAINTAINER Michael Büchner <m.buechner@dnb.de>
 COPY pom.xml /tmp/
 COPY src /tmp/src/
 WORKDIR /tmp/
 RUN mvn package
 
-FROM openjdk:15-slim
+FROM openjdk:17-slim
 MAINTAINER Michael Büchner <m.buechner@dnb.de>
 RUN mkdir /home/iiif-presentation
 RUN mkdir /tmp/xdgconfig
@@ -16,4 +16,3 @@ WORKDIR /home/iiif-presentation/
 CMD ["java", "-Xms512M", "-Xmx1G", "-jar", "iiif-presentation.jar"]
 
 EXPOSE 8080
-

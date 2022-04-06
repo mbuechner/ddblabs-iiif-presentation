@@ -10,7 +10,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -44,33 +44,17 @@ export var ManifestForm = /*#__PURE__*/function (_Component) {
     _this.state = {
       formValue: ''
     };
-    _this.inputRef = /*#__PURE__*/React.createRef();
     _this.formSubmit = _this.formSubmit.bind(_assertThisInitialized(_this));
     _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_this));
     _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
     return _this;
   }
   /**
-   *
-   * @param {*} prevProps
-   * @param {*} prevState
+   * Reset the form state
    */
 
 
   _createClass(ManifestForm, [{
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      var addResourcesOpen = this.props.addResourcesOpen;
-
-      if (this.inputRef && this.inputRef.current && addResourcesOpen) {
-        this.inputRef.current.focus();
-      }
-    }
-    /**
-     * Reset the form state
-     */
-
-  }, {
     key: "handleCancel",
     value: function handleCancel() {
       var onCancel = this.props.onCancel;
@@ -124,9 +108,11 @@ export var ManifestForm = /*#__PURE__*/function (_Component) {
     value: function render() {
       var formValue = this.state.formValue;
       var _this$props2 = this.props,
+          addResourcesOpen = _this$props2.addResourcesOpen,
           classes = _this$props2.classes,
           onCancel = _this$props2.onCancel,
           t = _this$props2.t;
+      if (!addResourcesOpen) return null;
       return /*#__PURE__*/React.createElement("form", {
         onSubmit: this.formSubmit
       }, /*#__PURE__*/React.createElement(Grid, {
@@ -138,7 +124,7 @@ export var ManifestForm = /*#__PURE__*/function (_Component) {
         sm: 8,
         md: 9
       }, /*#__PURE__*/React.createElement(TextField, {
-        inputRef: this.inputRef,
+        autoFocus: true,
         fullWidth: true,
         value: formValue,
         id: "manifestURL",
