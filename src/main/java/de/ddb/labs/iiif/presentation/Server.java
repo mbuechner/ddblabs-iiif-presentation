@@ -28,6 +28,7 @@ import de.ddb.labs.iiif.presentation.helper.NaturalOrderComparator;
 import io.javalin.Javalin;
 import io.javalin.http.ContentType;
 import io.javalin.http.staticfiles.Location;
+import io.javalin.http.staticfiles.StaticFileConfig;
 import io.javalin.plugin.json.JavalinJackson;
 import io.javalin.plugin.json.JsonMapper;
 import io.javalin.plugin.rendering.vue.JavalinVue;
@@ -113,14 +114,12 @@ public class Server {
         }
     }
 
-
     public JsonNode changeDdbImage(JsonNode parent, String path) throws JsonProcessingException {
         String jsonString = mapper.writeValueAsString(parent);
         jsonString = jsonString.replaceAll("\\{\\{iiif\\-image\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.image-api-url"));
         jsonString = jsonString.replaceAll("\\{\\{self\\-url\\}\\}", Configuration.get().getValue("iiif-presentation.base-url") + path);
         return mapper.readTree(jsonString);
     }
-
 
     /**
      * Clone Repository configured in iiif-presentation.cfg or set over
@@ -145,6 +144,7 @@ public class Server {
             LOG.error(e.getMessage());
         }
     }
+
     /**
      * Sets environment variables if there any, otherwise it'll use the values
      * from iiif-presentation.cfg
@@ -185,6 +185,7 @@ public class Server {
             LOG.info("ObjectId of last commit is now: {}", oIdOfLastCommit);
         }
     }
+
     /**
      * Start the server... :-)
      *
@@ -202,11 +203,14 @@ public class Server {
             config.autogenerateEtags = true;
             config.showJavalinBanner = false;
             // config.addStaticFiles(files, Location.EXTERNAL);
-            if (Configuration.get().getValue("iiif-presentation.pathprefix").isBlank()) {
-                config.addStaticFiles("viewer/", Location.CLASSPATH);
-            } else {
-                config.addStaticFiles(Configuration.get().getValue("iiif-presentation.pathprefix"), Location.CLASSPATH);
-            }
+
+            config.addStaticFiles(staticFiles -> {
+                staticFiles.hostedPath = Configuration.get().getValue("iiif-presentation.pathprefix");
+                staticFiles.directory = "/viewer";
+                staticFiles.location = Location.CLASSPATH;
+                staticFiles.precompress = true;
+                staticFiles.aliasCheck = null;
+            });
 
             config.requestLogger((ctx, timeMs) -> {
                 LOG.debug("{} {} took {}", ctx.method(), ctx.path(), timeMs);
@@ -269,7 +273,7 @@ public class Server {
                     return String.format("{\"error\":\"404\",\"message\": \"%s\"}", StringEscapeUtils.escapeJson(ex.getMessage()));
                 }
             });
-            
+
             ctx.contentType(ContentType.APPLICATION_JSON).future(future);
         });
 
@@ -349,7 +353,6 @@ public class Server {
          */
         app.get(Configuration.get().getValue("iiif-presentation.pathprefix") + "/api/description", ctx -> {
 
-            
             final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
                 String f = ctx.queryParam("f");
                 if (f != null && !f.isEmpty()) {
@@ -374,7 +377,7 @@ public class Server {
                 }
             });
             ctx.contentType(ContentType.APPLICATION_JSON).future(future);
-            
+
         });
 
         /**
