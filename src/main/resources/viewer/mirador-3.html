@@ -30,6 +30,10 @@
 
             var miradorInstance = Mirador.viewer({
                 id: 'mirador',
+                language: 'de',
+                workspaceControlPanel: {
+                    enabled: false
+                },
                 theme: {
                     transitions: window.location.port === '4488' ? {create: () => 'none'} : {}
                 },
