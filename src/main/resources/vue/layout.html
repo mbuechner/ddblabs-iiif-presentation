@@ -25,9 +25,29 @@
                 <hr class="my-4"/>
                 <div class="row">
                     <div class="col-md-4 order-md-2 mb-4">
-                        <h4 class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="text-muted">Viewer</span>
-                        </h4>
+                        <h5 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">IIIF Presentation API 3-Viewer</span>
+                        </h5>
+                        <div class="list-group">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="mirador3link" target="_blank">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Mirador 3.3.0</h6>
+                                </div>
+                            </a>
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="universalviewerlink3" target="_blank">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Universal Viewer v3.1 (extern)</h6>
+                                </div>
+                            </a>
+                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="universalviewerlink4" target="_blank">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Universal Viewer v4.0.0-pre (extern)</h6>
+                                </div>
+                            </a>
+                        </div>
+                        <h5 class="d-flex justify-content-between align-items-center mb-3 mt-3">
+                            <span class="text-muted">IIIF Presentation API 2-Viewer</span>
+                        </h5>
                         <div class="list-group">
                             <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="dfgviewer" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
@@ -49,11 +69,6 @@
                                     <h6 class="mb-1">Mirador 2.7.0</h6>
                                 </div>
                             </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="mirador3link" target="_blank">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">Mirador 3.3.0</h6>
-                                </div>
-                            </a>
                             <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="tify" target="_blank">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">TIFY 0.25.3</h6>
@@ -63,22 +78,11 @@
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">Universal Viewer 2.0 (extern)</h6>
                                 </div>
-                            </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="universalviewerlink3" target="_blank">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">Universal Viewer v3.1 (extern)</h6>
-                                </div>
-                            </a>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start disabled" href="#" id="universalviewerlink4" target="_blank">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">Universal Viewer v4.0.0-pre (extern)</h6>
-                                </div>
-                            </a>        
-
+                            </a>       
                         </div>
                     </div>
                     <div class="col-md-8 order-md-1" id="main-vue">
-                        <h4 class="mb-3">Dateien</h4>
+                        <h4 class="mb-3 text-muted">Dateien</h4>
                         @routeComponent
                     </div>
                 </div>
@@ -100,7 +104,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="card">
                                 <div class="card-header" id="headingOne1" role="tab">
                                     <a aria-controls="collapseOne1" aria-expanded="false" class="nav-link disabled" data-parent="#accordionEx" data-toggle="collapse" href="#collapseOne1" id="manifestlink">
