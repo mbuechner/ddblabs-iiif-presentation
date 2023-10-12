@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta charset="utf-8">
+        <meta content="width=device-width,initial-scale=1" name="viewport">
         <title>TIFY</title>
         <script src="https://cdn.jsdelivr.net/npm/tify@0.29.2/dist/tify.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tify@0.29.2/dist/tify.css">  
-    </head><body style="margin: 0">
+        <link href="https://cdn.jsdelivr.net/npm/tify@0.29.2/dist/tify.css" rel="stylesheet">
+    </head>
+    <body style="margin: 0">
         <main id="tify" style="height: 100vh"></main>
         <script>
-            window.addEventListener('load', function () {
-                const options = {
-                    container: '#tify',
-                    urlQueryKey: 'tify',
-                };
-
-                const matches = window.location.search.match(/(\?|&)language\=([^&]*)/);
-                const language = matches && matches.length === 3 ? matches[2] : 'de';
-
-                if (language) {
-                    options.language = language;
+            var getUrlParameter = function (sParam) {
+                var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+                
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+                    
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true: decodeURIComponent(sParameterName[1]);
+                    }
                 }
-
-                window.tify = new Tify(options);
-            })
-        </script>
-        <script src="tify/dist/tify.js"></script>
+            };
+            var manifest = getUrlParameter('manifest');
+            var language = getUrlParameter('language');
+            new Tify({
+                container: '#tify',
+                manifestUrl: manifest ? decodeURIComponent(manifest): "https://wellcomelibrary.org/iiif/b18035723/manifest",
+                language: language ? decodeURIComponent(language): 'de',
+            });</script>
     </body>
 </html>
